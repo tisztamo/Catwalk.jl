@@ -1,11 +1,10 @@
 module JIT
 
-export compile, count_subtypes, @demo, createq
+export compile, compile, count_subtypes, @demo, createq
 
-using GeneralizedGenerated
 using BenchmarkTools
 
-const NUM_TYPES = 2*10
+const NUM_TYPES = 20
 const QUEUE_LENGTH = 100
 @assert QUEUE_LENGTH >= NUM_TYPES
 
@@ -21,48 +20,44 @@ const c1_count = Ref(0)
 const c2_count = Ref(0)
 reset() = (c1_count[] = 0; c2_count[] =0)
 
-count_subtypes(a::A) = nothing
-count_subtypes(c1::C1) = (c1_count[] = c1_count[] + 1; nothing)
-count_subtypes(c2::C2) = (c2_count[] = c2_count[] + 1; nothing)
+count_subtypes(a::A) = 0
+count_subtypes(c1::C1) = (c1_count[] = c1_count[] + 1; 1)
+count_subtypes(c2::C2) = (c2_count[] = c2_count[] + 1; 2)
 
-function gg_compile(op, fixtype2)
-    name = nameof(op)
-    compiled_name = Symbol("_comp_$(nameof(op))")
-    ex = :((arg1::A) -> begin
-            if arg1 isa $fixtype2
-                return $name(arg1)
-            end
-            return $name(arg1)
-        end)
-    return runtime_eval(JIT, ex)
+struct JITFn{TOp, TFixType, TNext}
+    op::TOp
+    next::TNext
 end
 
+compile(op) = JITFn{typeof(op), Nothing, Nothing}(op, nothing)
+compile(op, fixtype) = JITFn{typeof(op), fixtype, Nothing}(op, nothing)
+compile(op, fixtype, fixtypes...) = begin
+    next = compile(op, fixtypes)
+    return JITFn{typeof(op), fixtype, typeof(next)}(op, next)
+end
 
-function compile(op, fixtype2)
-    name = nameof(op)
-    compiled_name = Symbol("_comp_$(nameof(op))")
-    ex = :((arg1::A) -> begin
-            if arg1 isa $fixtype2
-                return $name(arg1)
-            end
-            return $name(arg1)
-        end)
-    Base.pushmeta!(ex, :inline)
-    return eval(ex)
+@inline (j::JITFn{TOp, TFixType, TNext})(arg) where {TOp, TFixType, TNext} = begin
+    if arg isa TFixType
+        return j.op(arg)
+    end
+    if TNext === Nothing
+        return j.op(arg)
+    end
+    return TNext(arg)
 end
 
 function demo(num_types=NUM_TYPES, queue_length = QUEUE_LENGTH)
     for alpha = 0.1:0.1:0.9
-        println("\n" * string(alpha) *": Dynamic dispatch")
+        print("\n" * string(alpha) *": Dynamic dispatch               ")
         reset()
-        #@btime foreach(count_subtypes, q) setup=(q=createq($alpha, $num_types, $queue_length))
+        @btime foreach(count_subtypes, q) setup=(q=createq($alpha, $num_types, $queue_length))
 
         fasttype = c1_count[] > c2_count[] ? C1 : C2
-        #fasttype = rand() > 0.5 ? C2 : Int
-        println("$alpha: $(c1_count[]) vs $(c2_count[]) => $fasttype")
-        compiled=gg_compile(count_subtypes, fasttype)
+        print("$alpha: $(c1_count[]) vs $(c2_count[]) => $fasttype")
+        compiled = compile(count_subtypes, fasttype)
 
-        #compiled(C1{Int}())
+        #@test compiled(C1{Int}()) == 1
+        #@test compiled(C2{Real}()) == 2
 
         reset()
         @btime foreach($compiled, q) setup=(q=createq($alpha, $num_types, $queue_length))
