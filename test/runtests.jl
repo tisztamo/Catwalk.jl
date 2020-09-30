@@ -34,9 +34,9 @@ function demo_subtypes(num_types=NUM_TYPES, queue_length = QUEUE_LENGTH)
         fasttype = c1_count[] > c2_count[] ? C1 : C2
         print("$alpha: $(c1_count[]) vs $(c2_count[]) => $fasttype")
 
-        compiled = compile(count_subtypes, fasttype)
+        compiled = compile(count_subtypes; fixtypes=(fasttype,))
 
-        @test compiled isa JIT.JITFn{typeof(count_subtypes)}
+        @test compiled isa JIT.CompiledFn{typeof(count_subtypes)}
         @test compiled(C1{Int}()) == 1
         @test compiled(C2{Real}()) == 2
 
