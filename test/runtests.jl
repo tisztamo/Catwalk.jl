@@ -11,7 +11,7 @@ struct C1{T} <: A{T} end
 struct C2{T} <: A{T} end
 
 function createq(alpha=0.5, num_types = NUM_TYPES, queue_length = QUEUE_LENGTH )
-    return [rand() < alpha ? C1{Val(i % num_types)}() : C2{Val(i % num_types)}() for i = 1:queue_length]
+    return A[rand() < alpha ? C1{Val(i % num_types)}() : C2{Val(i % num_types)}() for i = 1:queue_length]
 end
 
 const c1_count = Ref(0)
@@ -47,4 +47,20 @@ end
 
 @testset "demo_subtypes" begin
     demo_subtypes() # Also runs inside a function
+end
+
+@testset "fix and multifix" begin
+    compiledC1 = compile(count_subtypes; fixtypes=(C1,))
+    compiledC2 = compile(count_subtypes; fixtypes=(C2,))
+    compiledBoth = compile(count_subtypes; fixtypes=(C1, C2))
+    @test compiledC1(C1{Int}()) == 1
+    @test compiledC2(C2{Real}()) == 2
+    @test compiledC2(C1{Int}()) == 1
+    @test compiledC2(C2{Real}()) == 2
+    @test compiledBoth(C1{Int}()) == 1
+    @test compiledBoth(C2{Real}()) == 2
+    @show @btime foreach($compiledBoth, q) setup=(q=createq())
+    @show @btime foreach($compiledC1, q) setup=(q=createq())
+    @show @btime foreach($compiledC2, q) setup=(q=createq())
+    @show @btime foreach($count_subtypes, q) setup=(q=createq())
 end

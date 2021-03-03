@@ -50,7 +50,7 @@ end
     if TNext === Nothing
         return j.op(arg)
     end
-    return TNext(arg)
+    return j.next(arg)
 end
 
 @inline function (j::CompiledFn)(arg)
