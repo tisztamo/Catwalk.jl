@@ -5,56 +5,40 @@ An optimizing Just In Time compiler written in Julia.
 """
 module JIT
 
-export compile
+export @jit, CallBoost, ctx, SparseProfile, JITContext
 
-abstract type AbstractCompiledFn end
+include("typelist.jl")
+include("compile.jl")
+include("profile.jl")
+include("optimize.jl")
 
-struct CompiledFn{TGeneralOp, TOptimizedOp} <: AbstractCompiledFn
-    general::TGeneralOp
-    opt::TOptimizedOp
-    fixtypes::Union{Nothing, Tuple{Vararg{Type}}}
+mutable struct CallBoost # TODO: worth parametrizing?
+    profilestrategy::ProfileStrategy
+    optimizer::Optimizer
+    profiler::Profiler
+    round::Int
+    CallBoost(strategy, optimizer=TopNOptimizer()) = new(strategy, optimizer, NoProfiler(), 0)
 end
 
-function compile(op; fixtypes=nothing)
-    result = op
-    result = fixtype(result, fixtypes...) # Apply passes TODO implement them as a plugin
-    return CompiledFn(op, result, fixtypes) # Present the result
+function step!(boost::CallBoost)
+    boost.round += 1
 end
 
-"""
-    struct FixedType{TOp, TFixType, TNext}
-        op::TOp
-        next::TNext
-    end
-
-This functor is the IR for a JIT compilation.
-
-It wraps a general / the original version of, the function
-"""
-struct FixedType{TOp, TFixType, TNext} <: AbstractCompiledFn
-    op::TOp
-    next::TNext
+function ctx(boost::CallBoost)
+    newprofiler = getprofiler(boost.profilestrategy, boost.round)
+    context = JITContext{typeof(newprofiler), fixtypes(boost.optimizer, boost.profiler)}(newprofiler)
+    empty!(newprofiler)
+    boost.profiler = newprofiler
+    return context
 end
 
-fixtype(op) = FixedType{typeof(op), Nothing}(op, nothing)
-fixtype(op, _fixtype) = FixedType{typeof(op), _fixtype, Nothing}(op, nothing)
-fixtype(op, _fixtype, fixtypes...) = begin
-    next = fixtype(op, fixtypes...)
-    return FixedType{typeof(op), _fixtype, typeof(next)}(op, next)
+struct JITContext{TProfiler, TFixtypes}
+    profiler::TProfiler
+    JITContext() = new{NoProfiler, EmptyTypeList}()
+    JITContext{TProfiler, TFixtypes}(profiler) where {TProfiler, TFixtypes} = new{TProfiler, TFixtypes}(profiler)
 end
 
-@inline function (j::FixedType{TOp, TFixType, TNext})(arg) where {TOp, TFixType, TNext}
-    if arg isa TFixType
-        return j.op(arg)
-    end
-    if TNext === Nothing
-        return j.op(arg)
-    end
-    return j.next(arg)
-end
-
-@inline function (j::CompiledFn)(arg)
-    j.opt(arg)
-end
+fixtypes(::Type{JITContext{TProfiler, TFixtypes}}) where {TProfiler, TFixtypes} = TFixtypes
+profiler(ctx::JITContext) = ctx.profiler
 
 end # module
