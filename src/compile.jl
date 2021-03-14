@@ -1,6 +1,6 @@
-function jitexpr(funexpr, argname, fixtypes)
+function jitexpr(funexpr, callname, argname, fixtypes)
     retval = Expr(:block)
-    push!(retval.args, profileexpr(argname))
+    push!(retval.args, profileexpr(callname, argname))
     for fixtype in fixtypes
         @assert fixtype isa Type
         push!(retval.args, quote
@@ -28,7 +28,7 @@ function inject_jit(expr, jittedcallname, jittedarg, fixtypes)
     return rreplace(
         expr,
         e -> e isa Expr && e.head == :call && e.args[1] == jittedcallname,
-        e -> jitexpr(e, jittedarg, fixtypes)
+        e -> jitexpr(e, jittedcallname, jittedarg, fixtypes)
     )
 end
 
@@ -38,7 +38,7 @@ macro jit(jittedcallname::Symbol, jittedarg::Symbol, expr::Expr)
     body = Expr(:block, expr.args[2].args...)
     newbody = quote
         Base.@_inline_meta
-        decoded_fixtypes = JIT.decode(JIT.fixtypes(jitctx))
+        decoded_fixtypes = JIT.decode(JIT.fixtypes(JIT.callctx(jitctx, $jittedcallname)))
         return JIT.inject_jit(
             $(Expr(:quote, body)),
             $(Expr(:quote, jittedcallname)),
