@@ -36,15 +36,20 @@ macro jit(jittedcallname::Symbol, jittedarg::Symbol, expr::Expr)
     @assert expr.head == :function "@jit only supports long-form function declarations"
     signature = expr.args[1]
     body = Expr(:block, expr.args[2].args...)
+    explore = exploreexpr(jittedcallname, jittedarg)
     newbody = quote
         Base.@_inline_meta
-        decoded_fixtypes = JIT.decode(JIT.fixtypes(JIT.callctx(jitctx, $jittedcallname)))
-        return JIT.inject_jit(
-            $(Expr(:quote, body)),
-            $(Expr(:quote, jittedcallname)),
-            $(Expr(:quote, jittedarg)),
-            decoded_fixtypes
-        )
+        if ($explore) # A known, already jitted call
+            decoded_fixtypes = JIT.decode(JIT.fixtypes(JIT.callctx(jitctx, $jittedcallname)))
+            return JIT.inject_jit(
+                $(Expr(:quote, body)),
+                $(Expr(:quote, jittedcallname)),
+                $(Expr(:quote, jittedarg)),
+                decoded_fixtypes
+            )
+        else
+            return $(Expr(:quote, body))
+        end
     end
     newfn = Expr(:macrocall, Symbol("@generated"), LineNumberNode(0), Expr(:function, signature, newbody))
     return newfn |> esc

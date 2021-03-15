@@ -11,6 +11,7 @@ include("typelist.jl")
 include("compile.jl")
 include("profile.jl")
 include("optimize.jl")
+include("explore.jl")
 
 mutable struct CallBoost # TODO: worth parametrizing?
     fnsym::Symbol
@@ -42,32 +43,57 @@ end
 fixtypes(::Type{CallCtx{TProfiler, TFixtypes}}) where {TProfiler, TFixtypes} = TFixtypes
 profiler(ctx::CallCtx) = ctx.profiler
 
-mutable struct RuntimeOptimizer
+struct RuntimeOptimizer
+    id::Int
     callboosts::Vector{CallBoost}
-    callsites::Set{Symbol}
-    RuntimeOptimizer() = new([CallBoost()], Set())
-    RuntimeOptimizer(callboosts...) = new([callboosts...], Set())
+    explorer::Explorer
+end
+function RuntimeOptimizer(callboosts...; explorertype=BasicExplorer)
+    id = rand(Int)
+    opt = RuntimeOptimizer(id, [], explorertype(id))
+    for boost in callboosts
+        add_boost!(opt, boost)
+    end
+    return opt
 end
 
-step!(opt::RuntimeOptimizer) = step!.(opt.callboosts)
+optimizerid(opt::RuntimeOptimizer) = opt.id
 
-struct OptimizerCtx{TCallCtxs}
+function add_boost!(opt::RuntimeOptimizer, boost)
+    push!(opt.callboosts, boost)
+    register_callsite!(opt.id, boost.fnsym)
+end
+
+function step!(opt::RuntimeOptimizer)
+    update_callboosts(opt)
+    step!.(opt.callboosts)
+    step!(opt.explorer)
+end
+
+function update_callboosts(opt::RuntimeOptimizer)
+    currentsyms = Set(map(b -> b.fnsym, opt.callboosts))
+    for newsite in setdiff(get_freshcallsites!(opt.id), currentsyms)
+        add_boost!(opt, CallBoost(newsite))
+    end
+end
+
+struct OptimizerCtx{TCallCtxs, TExplorer}
     callctxs::TCallCtxs
-    callsites::Set{Symbol}
-    OptimizerCtx() = new{NamedTuple{}}(NamedTuple(), Set())
-    OptimizerCtx(callctxs, callsites) = new{typeof(callctxs)}(callctxs, callsites)
+    explorer::TExplorer
+    OptimizerCtx() = new{NamedTuple{}, NoExplorer}(NamedTuple(), NoExplorer())
+    OptimizerCtx(optimizerid, callctxs, explorer) = new{typeof(callctxs), typeof(explorer)}(callctxs, explorer)
 end
 
 function ctx(opt::RuntimeOptimizer)
     callctxs = (;map(boost -> (boost.fnsym, ctx(boost)), opt.callboosts)...)
-    return OptimizerCtx(callctxs, opt.callsites)
+    return OptimizerCtx(optimizerid(opt), callctxs, opt.explorer)
 end
 
-function callctx(ctx::Type{OptimizerCtx{TCallCtxs}}, key) where TCallCtxs
+function callctx(::Type{OptimizerCtx{TCallCtxs, TExplorer}}, key) where {TCallCtxs, TExplorer}
     return callctx(TCallCtxs, key)
 end
 
-function callctx(ctxs::Type{NamedTuple{TNames, TVals}}, key) where {TNames, TVals}
+function callctx(::Type{NamedTuple{TNames, TVals}}, key) where {TNames, TVals}
     name = nameof(key)
     idx = findfirst(n -> n==name, TNames)
     if isnothing(idx)
@@ -77,12 +103,12 @@ function callctx(ctxs::Type{NamedTuple{TNames, TVals}}, key) where {TNames, TVal
     return fieldtypes(TVals)[idx]
 end
 
-function callctx(ctxs::Type{NamedTuple}, key)
-    return typeof(CallCtx())
+function callctx(::Type{NamedTuple}, key)
+    return typeof(CallCtx()) # TODO eliminate?
 end
 
-function log_callsite(ctx::OptimizerCtx, calledfn, argname)
-    push!(ctx.callsites, nameof(calledfn))
+function explorer(::Type{OptimizerCtx{TCallCtxs, TExplorer}}) where {TCallCtxs, TExplorer}
+    return TExplorer    
 end
 
 end # module

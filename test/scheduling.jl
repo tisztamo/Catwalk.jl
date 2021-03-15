@@ -86,20 +86,23 @@ push!(scheduler.msgqueue, Msg{Ping}(Addr(42), Ping()))
 @testset "ping-pong" begin
     msgcallboost = CallBoost(:step_kern1!, profilestrategy = SparseProfile(0.02))
     actorcallboost = CallBoost(:step_kern!, profilestrategy = SparseProfile(0.02))
-    optimizer = RuntimeOptimizer(msgcallboost, actorcallboost)
-    emptyoptimizer = RuntimeOptimizer()
+    optimizer = RuntimeOptimizer()
+    #JIT.add_boost!(optimizer, msgcallboost)
+    #JIT.add_boost!(optimizer, actorcallboost)
+    #emptyoptimizer = RuntimeOptimizer()
     @show ctx(optimizer)
     normaltime = 0
     jittedtime = 0
-    for i=1:10
+    for i=1:40
         println("------ Next JIT round: -------")
         JIT.step!(optimizer)
         jittedtime += @time measure_steps(scheduler, ctx(optimizer))
-        @time measure_steps(scheduler, ctx(emptyoptimizer))
+        #@time measure_steps(scheduler, ctx(emptyoptimizer))
         normaltime += @time measure_steps(scheduler)
     end
-    @show emptyoptimizer
+    #@show emptyoptimizer
     win = 1.0 - (jittedtime / normaltime)
     println("jitted: $(jittedtime / 1e9), normal: $(normaltime / 1e9), win: $win")
+    @show JIT.callsites
     @test win > 0.1
 end

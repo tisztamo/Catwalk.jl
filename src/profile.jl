@@ -10,11 +10,7 @@ typefreqs(p::Profiler) = p.typefreqs
 
 function profileexpr(calledfn, argname)
     return quote
-        if hasfield(typeof(jitctx.callctxs), nameof($calledfn))
-            JIT.log_dispatch(JIT.profiler(jitctx.callctxs.$calledfn), $(calledfn), typeof($argname))
-        else
-            JIT.log_callsite(jitctx, $calledfn, $argname)
-        end
+        JIT.log_dispatch(JIT.profiler(jitctx.callctxs.$calledfn), $(calledfn), typeof($argname))
     end
 end
 
