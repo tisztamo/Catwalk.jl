@@ -1,15 +1,10 @@
-# ---- Sample code extracted from the original target of this package (CircoCore.jl) ----
+# ---- Sample code simplified from the original use case of this jit optimizer (CircoCore.jl) ----
 
 struct Addr
     box::UInt64
 end
  
 abstract type Actor{Tcore} end
-
-mutable struct PingPonger{TCore} <: Actor{TCore}
-    addr::Addr
-    core::TCore
-end
  
 struct Msg{TBody}
     target::Addr
@@ -17,10 +12,8 @@ struct Msg{TBody}
 end
 target(msg) = msg.target
 
-struct Ping end
-struct Pong end
-
 abstract type AbstractScheduler{TMsg, TCoreState} end
+
 mutable struct Scheduler{THooks, TMsg, TCoreState} <: AbstractScheduler{TMsg, TCoreState}
     msgqueue::Vector{Any}
     actorcache::Dict{UInt64,Any}
@@ -28,13 +21,13 @@ mutable struct Scheduler{THooks, TMsg, TCoreState} <: AbstractScheduler{TMsg, TC
     Scheduler{T}() where T = new{T,T,T}([], Dict())
 end
 
-@inline @jit step_kern1! msg function step!(scheduler::AbstractScheduler, jitctx=JIT.OptimizerCtx())
+@jit step_kern1! (msg) function step!(scheduler::AbstractScheduler, jitctx=JIT.OptimizerCtx())
     msg = popfirst!(scheduler.msgqueue)
     step_kern1!(msg, scheduler, jitctx)
     return nothing
 end
  
-@inline @jit step_kern! targetactor function step_kern1!(msg, scheduler::AbstractScheduler, jitctx)
+@jit step_kern! (targetactor) function step_kern1!(msg, scheduler::AbstractScheduler, jitctx)
     targetbox = target(msg).box::UInt64
     targetactor = get(scheduler.actorcache, targetbox, nothing)
     step_kern!(scheduler, msg, targetactor)
@@ -45,8 +38,16 @@ end
 end
 
 @inline function onmessage(actor, msg, scheduler)
-    error(42)
+    error("This should never happen.") # escape route for monkey-patching and co.
 end
+
+mutable struct PingPonger{TCore} <: Actor{TCore}
+    addr::Addr
+    core::TCore # boilerplate, should be eliminated by a dsl
+end
+
+struct Ping end
+struct Pong end
 
 for i=1:10
     name = Symbol(string("Body", i))

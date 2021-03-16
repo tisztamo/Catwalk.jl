@@ -47,7 +47,10 @@ function log_callsite(explorer::Type{BasicExplorer{TOptimizerId}}, calledfn, arg
         return true
     else
         freshfns = get_freshcallsites!(TOptimizerId)
-        push!(freshfns, calledfn)
+        if !(calledfn in freshfns)
+            @debug "Found call site `$calledfn`, optimizing argument `$argname`."
+            push!(freshfns, calledfn)
+        end
     end
     return false
 end

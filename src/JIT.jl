@@ -93,7 +93,9 @@ function callctx(::Type{OptimizerCtx{TCallCtxs, TExplorer}}, key) where {TCallCt
     return callctx(TCallCtxs, key)
 end
 
-function callctx(::Type{NamedTuple{TNames, TVals}}, key) where {TNames, TVals}
+function callctx(::Type{
+            NamedTuple{TNames, TVals}
+        }, key) where {TNames, TVals}
     name = nameof(key)
     idx = findfirst(n -> n==name, TNames)
     if isnothing(idx)
@@ -107,7 +109,12 @@ function callctx(::Type{NamedTuple}, key)
     return typeof(CallCtx()) # TODO eliminate?
 end
 
-function explorer(::Type{OptimizerCtx{TCallCtxs, TExplorer}}) where {TCallCtxs, TExplorer}
+function explorer(::Type{
+        OptimizerCtx{
+            TCallCtxs,
+            TExplorer
+        }
+    }) where {TCallCtxs, TExplorer}
     return TExplorer    
 end
 
