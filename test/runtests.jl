@@ -3,6 +3,8 @@ using Test
 using Random
 using BenchmarkTools
 
+Random.seed!(42)
+
 # To run only selected tests, use e.g.:
 #
 #   Pkg.test("JIT", test_args=["scheduling"])
@@ -11,10 +13,10 @@ enabled_tests = lowercase.(ARGS)
 function addtests(fname)
     key = lowercase(splitext(fname)[1])
     if isempty(enabled_tests) || key in enabled_tests
-        Random.seed!(42)
         include(fname)
     end
 end
 
-addtests("encode.jl")
+addtests("typelist.jl")
+addtests("costmodel.jl")
 addtests("scheduling.jl")

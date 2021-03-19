@@ -10,6 +10,7 @@ export @jit, RuntimeOptimizer, CallBoost, ctx, SparseProfile, CallCtx
 include("typelist.jl")
 include("compile.jl")
 include("profile.jl")
+include("costmodel.jl")
 include("optimize.jl")
 include("explore.jl")
 

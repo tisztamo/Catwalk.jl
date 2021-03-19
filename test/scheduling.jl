@@ -1,3 +1,5 @@
+using UnicodePlots
+
 # ---- Sample code simplified from the original use case of this jit optimizer (CircoCore.jl) ----
 
 struct Addr
@@ -41,6 +43,21 @@ end
     error("This should never happen.") # escape route for monkey-patching and co.
 end
 
+# --- Non-jitted version for comparison
+
+@inline function step_nojit!(scheduler::AbstractScheduler)
+    msg = popfirst!(scheduler.msgqueue)
+    step_kern1_nojit!(msg, scheduler)
+    return nothing
+end
+ 
+@inline function step_kern1_nojit!(msg, scheduler::AbstractScheduler)
+    targetbox = target(msg).box::UInt64
+    targetactor = get(scheduler.actorcache, targetbox, nothing)
+    step_kern!(scheduler, msg, targetactor)
+end
+
+
 mutable struct PingPonger{TCore} <: Actor{TCore}
     addr::Addr
     core::TCore # boilerplate, should be eliminated by a dsl
@@ -67,10 +84,26 @@ end
     push!(scheduler.msgqueue, Msg{Pong}(actor.addr, Pong()))
 end
 
-function measure_steps(scheduler, ctx=JIT.OptimizerCtx(); num=1e6)
+function measure_steps(scheduler, _ctx=JIT.OptimizerCtx(); num=1e6)
     startts = time_ns()
     for i=1:num
-        step!(scheduler, ctx)
+        step!(scheduler, _ctx)
+    end
+    return time_ns() - startts
+end
+
+function measure_steps2(scheduler, opt; num=1e6)
+    startts = time_ns()
+    JIT.step!(opt)
+    _ctx = ctx(opt)
+    measure_steps(scheduler, _ctx)
+    return time_ns() - startts
+end
+
+function measure_steps_nojit!(scheduler; num=1e6)
+    startts = time_ns()
+    for i=1:num
+        step_nojit!(scheduler)
     end
     return time_ns() - startts
 end
@@ -85,25 +118,28 @@ push!(scheduler.msgqueue, Msg{Ping}(Addr(42), Ping()))
 #step!(scheduler)
 
 @testset "ping-pong" begin
-    msgcallboost = CallBoost(:step_kern1!, profilestrategy = SparseProfile(0.02))
-    actorcallboost = CallBoost(:step_kern!, profilestrategy = SparseProfile(0.02))
+    #msgcallboost = CallBoost(:step_kern1!, profilestrategy = SparseProfile(0.01))
+    #actorcallboost = CallBoost(:step_kern!, profilestrategy = SparseProfile(0.01))
     optimizer = RuntimeOptimizer()
     #JIT.add_boost!(optimizer, msgcallboost)
     #JIT.add_boost!(optimizer, actorcallboost)
-    #emptyoptimizer = RuntimeOptimizer()
-    @show ctx(optimizer)
     normaltime = 0
     jittedtime = 0
-    for i=1:40
-        println("------ Next JIT round: -------")
-        JIT.step!(optimizer)
-        jittedtime += @time measure_steps(scheduler, ctx(optimizer))
-        #@time measure_steps(scheduler, ctx(emptyoptimizer))
-        normaltime += @time measure_steps(scheduler)
+    for i=1:200
+        println("------ JIT round #$(i): -------")
+        jittedtime += @time begin measure_steps2(scheduler, optimizer) end
+        normaltime += @time measure_steps_nojit!(scheduler)
+        println(barplot(
+            ["JIT-ed", "original"],
+            [jittedtime / 1e9, normaltime / 1e9];
+            title="Runtime"
+        ))
+        win = 1.0 - (jittedtime / normaltime)
+        winpercent = round(win * 100_000) / 1000
+        println("Win: $(winpercent)%.")
+        print(repeat("\n", 10))
+        print(repeat("\u1b[1F", 10))
     end
-    #@show emptyoptimizer
     win = 1.0 - (jittedtime / normaltime)
-    println("jitted: $(jittedtime / 1e9), normal: $(normaltime / 1e9), win: $win")
-    @show JIT.callsites
     @test win > 0.1
 end
