@@ -20,7 +20,7 @@ mutable struct CallBoost # TODO: worth parametrizing?
     optimizer::Optimizer
     profiler::Profiler
     round::Int
-    CallBoost(fnsym=:_auto; profilestrategy=SparseProfile(), optimizer=TopNOptimizer()) = new(fnsym, profilestrategy, optimizer, NoProfiler(), 0)
+    CallBoost(fnsym; profilestrategy=SparseProfile(), optimizer=TopNOptimizer()) = new(fnsym, profilestrategy, optimizer, NoProfiler(), 1)
 end
 
 function step!(boost::CallBoost)

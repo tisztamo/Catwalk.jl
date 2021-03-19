@@ -36,7 +36,7 @@ struct SparseProfile <: ProfileStrategy
 end
 
 function getprofiler(strategy::SparseProfile, round::Integer)
-    if round <= 1 || rand(rng) <= strategy.sparsity
+    if round <= 2 || rand(rng) < strategy.sparsity # First round is exploration only, second always profiled
         return strategy.profiler
     end
     return NoProfiler()

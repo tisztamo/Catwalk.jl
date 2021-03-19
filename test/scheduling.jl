@@ -1,5 +1,7 @@
 using UnicodePlots
 
+const STEPS_PER_ROUND=1e6
+
 # ---- Sample code simplified from the original use case of this jit optimizer (CircoCore.jl) ----
 
 struct Addr
@@ -84,7 +86,7 @@ end
     push!(scheduler.msgqueue, Msg{Pong}(actor.addr, Pong()))
 end
 
-function measure_steps(scheduler, _ctx=JIT.OptimizerCtx(); num=1e6)
+function measure_steps(scheduler, _ctx=JIT.OptimizerCtx(); num=STEPS_PER_ROUND)
     startts = time_ns()
     for i=1:num
         step!(scheduler, _ctx)
@@ -92,7 +94,7 @@ function measure_steps(scheduler, _ctx=JIT.OptimizerCtx(); num=1e6)
     return time_ns() - startts
 end
 
-function measure_steps2(scheduler, opt; num=1e6)
+function measure_steps2(scheduler, opt; num=STEPS_PER_ROUND)
     startts = time_ns()
     JIT.step!(opt)
     _ctx = ctx(opt)
@@ -100,7 +102,7 @@ function measure_steps2(scheduler, opt; num=1e6)
     return time_ns() - startts
 end
 
-function measure_steps_nojit!(scheduler; num=1e6)
+function measure_steps_nojit!(scheduler; num=STEPS_PER_ROUND)
     startts = time_ns()
     for i=1:num
         step_nojit!(scheduler)
@@ -118,17 +120,17 @@ push!(scheduler.msgqueue, Msg{Ping}(Addr(42), Ping()))
 #step!(scheduler)
 
 @testset "ping-pong" begin
-    #msgcallboost = CallBoost(:step_kern1!, profilestrategy = SparseProfile(0.01))
+    msgcallboost = CallBoost(:step_kern1!, profilestrategy = SparseProfile(0.01))
     #actorcallboost = CallBoost(:step_kern!, profilestrategy = SparseProfile(0.01))
     optimizer = RuntimeOptimizer()
-    #JIT.add_boost!(optimizer, msgcallboost)
+    JIT.add_boost!(optimizer, msgcallboost)
     #JIT.add_boost!(optimizer, actorcallboost)
     normaltime = 0
     jittedtime = 0
     for i=1:200
         println("------ JIT round #$(i): -------")
-        jittedtime += @time begin measure_steps2(scheduler, optimizer) end
-        normaltime += @time measure_steps_nojit!(scheduler)
+        jittedtime += measure_steps2(scheduler, optimizer)
+        normaltime += measure_steps_nojit!(scheduler)
         println(barplot(
             ["JIT-ed", "original"],
             [jittedtime / 1e9, normaltime / 1e9];

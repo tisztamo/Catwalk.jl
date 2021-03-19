@@ -7,7 +7,7 @@ Random.seed!(42)
 
 # To run only selected tests, use e.g.:
 #
-#   Pkg.test("JIT", test_args=["scheduling"])
+#   using Pkg; Pkg.test("JIT", test_args=["scheduling"])
 #
 enabled_tests = lowercase.(ARGS)
 function addtests(fname)
@@ -20,3 +20,4 @@ end
 addtests("typelist.jl")
 addtests("costmodel.jl")
 addtests("scheduling.jl")
+addtests("typesweep.jl")

@@ -7,7 +7,7 @@ Base.@kwdef struct DefaultDispatchCostModel <: DispatchCostModel
     static_dispatch::ClockCycle
     dynamic_dispatch::ClockCycle
 end
-basemodel = DefaultDispatchCostModel(
+const basemodel = DefaultDispatchCostModel(
     skip                = 4,
     static_dispatch     = 10,
     dynamic_dispatch    = 150,
@@ -16,7 +16,7 @@ basemodel = DefaultDispatchCostModel(
 function costof(
     typefreqs::IdDict{Type, Int},
     fixtypes,
-    costmodel::DispatchCostModel
+    costmodel::DispatchCostModel = basemodel
     )
     total = 0
     for (type, freq) in pairs(typefreqs)
