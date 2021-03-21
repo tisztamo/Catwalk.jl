@@ -7,7 +7,7 @@ g(x::Val{T}) where T = 42 + T
 const vals = [Val(i) for i = 1:TYPE_COUNT]
 
 function getx(center)
-    idx = rand(center:(center + INTERVAL_LENGTH - 1))
+    idx = center + Int(round(INTERVAL_LENGTH * abs(randn())))
     while idx > TYPE_COUNT
         idx -= TYPE_COUNT
     end
@@ -38,7 +38,7 @@ end
     @time for r = 1:300
         JIT.step!(optimizer)
         jitctx = ctx(optimizer)
-        @show center = Int(round(r / 3)) % TYPE_COUNT + 1
+        @show center = Int(round(r)) % TYPE_COUNT + 1
         kernel(center, jitctx)
     end
 end

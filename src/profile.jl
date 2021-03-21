@@ -6,7 +6,8 @@ abstract type Profiler end
 
 Base.empty!(p::Profiler) = nothing
 log_dispatch(p::Profiler, fn, type) = nothing
-typefreqs(p::Profiler) = p.typefreqs
+
+typefreqs(prof::Profiler) = values(prof.typefreqs)
 
 function profileexpr(calledfn, argname)
     return quote
@@ -17,15 +18,14 @@ end
 struct NoProfiler <: Profiler end
 
 struct FullProfiler <: Profiler
-    typefreqs::IdDict{Type, Int}
-    FullProfiler() = new(IdDict())
+    typefreqs::DataTypeFrequencies
+    FullProfiler() = new(DataTypeFrequencies())
 end
 
 Base.empty!(p::FullProfiler) = empty!(p.typefreqs)
 
 @inline function log_dispatch(p::FullProfiler, fn, type)
-    old = get(p.typefreqs, type, 0)
-    p.typefreqs[type] = old + 1 
+    increment!(p.typefreqs, type)
 end
 
 abstract type ProfileStrategy end

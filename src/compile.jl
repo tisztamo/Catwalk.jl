@@ -13,7 +13,7 @@ function jitexpr(funexpr, callname, argname, fixtypes)
     return retval
 end
 
-function rreplace(expr, query, transform; symbols=false)
+function rreplace(expr::Expr, query, transform; symbols=false)
     if query(expr)
         return transform(expr)
     end
@@ -22,7 +22,7 @@ function rreplace(expr, query, transform; symbols=false)
 end
 rreplace(expr::QuoteNode, query, transform; symbols=false) = QuoteNode(rreplace(expr.value, query, transform; symbols=symbols))
 rreplace(expr::Symbol, query, transform; symbols=false) = symbols && query(expr) ? transform(expr) : expr
-rreplace(expr::LineNumberNode, query, transform; symbols=false) = expr
+rreplace(expr, query, transform; symbols=false) = expr
 
 function inject_jit(expr, jittedcallname, jittedarg, fixtypes)
     return rreplace(
@@ -40,7 +40,8 @@ macro jit(jittedcallname::Symbol, jittedarg::Symbol, expr::Expr)
     newbody = quote
         Base.@_inline_meta
         if ($explore) # A known, already jitted call
-            decoded_fixtypes = JIT.decode(JIT.fixtypes(JIT.callctx(jitctx, $jittedcallname)))
+            callctx = JIT.callctx(jitctx, $jittedcallname)
+            decoded_fixtypes = JIT.decode(JIT.fixtypes(callctx))
             return JIT.inject_jit(
                 $(Expr(:quote, body)),
                 $(Expr(:quote, jittedcallname)),

@@ -8,6 +8,7 @@ module JIT
 export @jit, RuntimeOptimizer, CallBoost, ctx, SparseProfile, CallCtx
 
 include("typelist.jl")
+include("frequencies.jl")
 include("compile.jl")
 include("profile.jl")
 include("costmodel.jl")

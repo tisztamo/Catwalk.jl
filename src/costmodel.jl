@@ -8,25 +8,26 @@ Base.@kwdef struct DefaultDispatchCostModel <: DispatchCostModel
     dynamic_dispatch::ClockCycle
 end
 const basemodel = DefaultDispatchCostModel(
-    skip                = 4,
-    static_dispatch     = 10,
-    dynamic_dispatch    = 150,
+    skip                = 3,
+    static_dispatch     = 8,
+    dynamic_dispatch    = 100,
 )
 
 function costof(
-    typefreqs::IdDict{Type, Int},
+    typefreqs, # iterable over Frequency-s 
     fixtypes,
     costmodel::DispatchCostModel = basemodel
     )
     total = 0
-    for (type, freq) in pairs(typefreqs)
-        skipcost, isstatic = calc_skipcost(type, freq, fixtypes, costmodel)
+    for f in typefreqs
+        skipcost, isstatic = calc_skipcost(f.type, f.freq, fixtypes, costmodel)
         dispatchcost = isstatic ? costmodel.static_dispatch : costmodel.dynamic_dispatch
         total += skipcost + dispatchcost
     end
     return total
 end
 
+# Returns (skipcost, isstatic)
 function calc_skipcost(type, freq, fixtypes, costmodel)
     idx = findfirst(type, fixtypes)
     perskip_cost = costmodel.skip * freq
