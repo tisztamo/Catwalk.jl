@@ -1,6 +1,7 @@
 
 const TYPE_COUNT = 100
 const INTERVAL_LENGTH = 10
+const INNER_CYCLE_LENGTH = 1e6
 
 g(x::Val{T}) where T = 42 + T
 
@@ -20,8 +21,19 @@ end
 end
 
 function kernel(center, jitctx)
-    @time for i = 1:3e6
+    for i = 1:INNER_CYCLE_LENGTH
         f(center, jitctx)
+    end
+end
+
+function f_nojit(center)
+    x = getx(center)
+    g(x)
+end
+
+function kernel_nojit(center)
+    for i = 1:INNER_CYCLE_LENGTH
+        f_nojit(center)
     end
 end
 
@@ -31,14 +43,20 @@ end
         optimizer,
         CallBoost(
             :g,
-            profilestrategy = SparseProfile(0.1),
-            optimizer       = JIT.TopNOptimizer(10)
+            profilestrategy = SparseProfile(0.01),
+            optimizer       = JIT.TopNOptimizer(20)
         )
     )
+    println("JIT-ed:")
     @time for r = 1:300
         JIT.step!(optimizer)
         jitctx = ctx(optimizer)
-        @show center = Int(round(r)) % TYPE_COUNT + 1
+        center = Int(round(r / 3)) % TYPE_COUNT + 1
         kernel(center, jitctx)
+    end
+    println("non-JIT-ed:")
+    @time for r = 1:300
+        center = Int(round(r / 3)) % TYPE_COUNT + 1
+        kernel_nojit(center)
     end
 end
