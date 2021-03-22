@@ -3,9 +3,9 @@ using Documenter, JIT
 makedocs(
     modules = [JIT],
     format = Documenter.HTML(; prettyurls = get(ENV, "CI", nothing) == "true"),
-    authors = "Schaffer Krisztian",
+    authors = "Krisztián Schäffer",
     sitename = "JIT.jl",
-    pages = Any["index.md"]
+    pages = Any["index.md", "usage.md"]
     # strict = true,
     # clean = true,
     # checkdocs = :exports,
