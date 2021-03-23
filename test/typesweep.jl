@@ -1,3 +1,4 @@
+using Random
 
 const TYPE_COUNT = 100
 const INTERVAL_LENGTH = 10
@@ -6,9 +7,10 @@ const INNER_CYCLE_LENGTH = 1e6
 g(x::Val{T}) where T = 42 + T
 
 const vals = [Val(i) for i = 1:TYPE_COUNT]
+const rng = Random.MersenneTwister()
 
 function getx(center)
-    idx = center + Int(round(INTERVAL_LENGTH * abs(randn())))
+    idx = center + Int(round(INTERVAL_LENGTH * abs(randn(rng))))
     while idx > TYPE_COUNT
         idx -= TYPE_COUNT
     end
@@ -37,14 +39,15 @@ function kernel_nojit(center)
     end
 end
 
+getcenter(r) = Int(round(r / 10)) % TYPE_COUNT + 1
+
 function measure_typesweep(optimizer)
     println("Catwalked:")
     startts = time_ns()
-    @time for r = 1:200
+    @time for r = 1:500
         Catwalk.step!(optimizer)
         jitctx = ctx(optimizer)
-        center = Int(round(r / 3)) % TYPE_COUNT + 1
-        kernel(center, jitctx)
+        kernel(getcenter(r), jitctx)
     end
     return time_ns() - startts
 end
@@ -52,9 +55,8 @@ end
 function measure_typesweep_nojit()
     println("non-Catwalked:")
     startts = time_ns()
-    @time for r = 1:200
-        center = Int(round(r / 3)) % TYPE_COUNT + 1
-        kernel_nojit(center)
+    @time for r = 1:500
+        kernel_nojit(getcenter(r))
     end
     return time_ns() - startts
 end
@@ -66,11 +68,20 @@ end
         optimizer,
         CallBoost(
             :g,
-            profilestrategy = SparseProfile(0.01),
-            optimizer       = Catwalk.TopNOptimizer(20)
+            profilestrategy = SparseProfile(0.02),
+            optimizer       = Catwalk.TopNOptimizer(50)
         )
     )
     jittedtime = measure_typesweep(optimizer)
     normaltime = measure_typesweep_nojit()
-    @test normaltime / jittedtime > 1.1
+    @test normaltime / jittedtime > 1.05
+
+    for r = 1:20 # Test result equivalence
+        center = getcenter(r)
+        Random.seed!(rng, r)
+        nojit_result = f_nojit(center)
+        Random.seed!(rng, r)
+        jit_result = f(center, ctx(optimizer))
+        @test  jit_result == nojit_result 
+    end
 end
