@@ -1,3 +1,3 @@
 [deps]
+Catwalk = "9bcf2ed6-9272-4d91-b0c2-0384bfee1cd2"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
-Catwalk = "860e6890-8a08-4313-9643-fcac6eb69798"

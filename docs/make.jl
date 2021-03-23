@@ -5,7 +5,6 @@ makedocs(
     format = Documenter.HTML(; prettyurls = get(ENV, "CI", nothing) == "true"),
     authors = "Krisztián Schäffer",
     sitename = "Catwalk.jl",
-    devbranch = "main",
     pages = Any["index.md", "usage.md"]
     # strict = true,
     # clean = true,

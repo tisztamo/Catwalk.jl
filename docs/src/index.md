@@ -30,4 +30,4 @@ Catwalk.jl assumes the followings:
 ## Alternatives
 
 - [ManualDispatch.jl](https://github.com/jlapeyre/ManualDispatch.jl) can serve you better in less dynamic cases, when it is feasible to list the dynamically dispatched types in the source code.
-- In even simpler cases using unions instead of a type hierarchy may allow the Julia compiler to "split the union". See for example [List performance improvent by Union-typed tail](https://github.com/JuliaCollections/DataStructures.jl/pull/682/commits/4742228d42ae441f9837e5825feedeb1c013bd99).
+- In even simpler cases using unions instead of a type hierarchy may allow the Julia compiler to "split the union". See for example [List performance improvent by Union-typed tail](https://github.com/JuliaCollections/DataStructures.jl/pull/682/commits/4742228d42ae441f9837e5825feedeb1c013bd99) in DataStructures.jl.
