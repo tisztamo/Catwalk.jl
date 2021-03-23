@@ -40,9 +40,9 @@ macro jit(jittedcallname::Symbol, jittedarg::Symbol, expr::Expr)
     newbody = quote
         Base.@_inline_meta
         if ($explore) # A known, already jitted call
-            callctx = JIT.callctx(jitctx, $jittedcallname)
-            decoded_fixtypes = JIT.decode(JIT.fixtypes(callctx))
-            return JIT.inject_jit(
+            callctx = Catwalk.callctx(jitctx, $jittedcallname)
+            decoded_fixtypes = Catwalk.decode(Catwalk.fixtypes(callctx))
+            return Catwalk.inject_jit(
                 $(Expr(:quote, body)),
                 $(Expr(:quote, jittedcallname)),
                 $(Expr(:quote, jittedarg)),

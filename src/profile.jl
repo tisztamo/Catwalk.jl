@@ -11,7 +11,7 @@ typefreqs(prof::Profiler) = values(prof.typefreqs)
 
 function profileexpr(calledfn, argname)
     return quote
-        JIT.log_dispatch(JIT.profiler(jitctx.callctxs.$calledfn), $(calledfn), typeof($argname))
+        Catwalk.log_dispatch(Catwalk.profiler(jitctx.callctxs.$calledfn), $(calledfn), typeof($argname))
     end
 end
 

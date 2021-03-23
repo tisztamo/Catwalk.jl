@@ -1,10 +1,10 @@
-using Documenter, JIT
+using Documenter, Catwalk
 
 makedocs(
-    modules = [JIT],
+    modules = [Catwalk],
     format = Documenter.HTML(; prettyurls = get(ENV, "CI", nothing) == "true"),
     authors = "Krisztián Schäffer",
-    sitename = "JIT.jl",
+    sitename = "Catwalk.jl",
     pages = Any["index.md", "usage.md"]
     # strict = true,
     # clean = true,
@@ -12,6 +12,6 @@ makedocs(
 )
 
 deploydocs(
-    repo = "github.com/tisztamo/JIT.jl.git",
+    repo = "github.com/tisztamo/Catwalk.jl.git",
     push_preview = true
 )

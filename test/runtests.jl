@@ -1,4 +1,4 @@
-using JIT
+using Catwalk
 using Test
 using Random
 using BenchmarkTools
@@ -7,7 +7,7 @@ Random.seed!(42)
 
 # To run only selected tests, use e.g.:
 #
-#   using Pkg; Pkg.test("JIT", test_args=["scheduling"])
+#   using Pkg; Pkg.test("Catwalk", test_args=["scheduling"])
 #
 enabled_tests = lowercase.(ARGS)
 function addtests(fname)

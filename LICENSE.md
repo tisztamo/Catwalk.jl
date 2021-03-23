@@ -1,4 +1,4 @@
-The JIT.jl package is licensed under the MIT "Expat" License:
+The Catwalk.jl package is licensed under the MIT "Expat" License:
 
 > Copyright (c) 2020: Schaffer Krisztian.
 >

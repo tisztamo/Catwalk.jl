@@ -37,26 +37,40 @@ function kernel_nojit(center)
     end
 end
 
-@testset "Type sweep" begin
-    optimizer = RuntimeOptimizer()
-    JIT.add_boost!(
-        optimizer,
-        CallBoost(
-            :g,
-            profilestrategy = SparseProfile(0.01),
-            optimizer       = JIT.TopNOptimizer(20)
-        )
-    )
-    println("JIT-ed:")
-    @time for r = 1:300
-        JIT.step!(optimizer)
+function measure_typesweep(optimizer)
+    println("Catwalked:")
+    startts = time_ns()
+    @time for r = 1:200
+        Catwalk.step!(optimizer)
         jitctx = ctx(optimizer)
         center = Int(round(r / 3)) % TYPE_COUNT + 1
         kernel(center, jitctx)
     end
-    println("non-JIT-ed:")
-    @time for r = 1:300
+    return time_ns() - startts
+end
+
+function measure_typesweep_nojit()
+    println("non-Catwalked:")
+    startts = time_ns()
+    @time for r = 1:200
         center = Int(round(r / 3)) % TYPE_COUNT + 1
         kernel_nojit(center)
     end
+    return time_ns() - startts
+end
+
+@testset "Type sweep" begin
+    println("Measuring performance in a type-sweep scenario")
+    optimizer = RuntimeOptimizer()
+    Catwalk.add_boost!(
+        optimizer,
+        CallBoost(
+            :g,
+            profilestrategy = SparseProfile(0.01),
+            optimizer       = Catwalk.TopNOptimizer(20)
+        )
+    )
+    jittedtime = measure_typesweep(optimizer)
+    normaltime = measure_typesweep_nojit()
+    @test normaltime / jittedtime > 1.1
 end

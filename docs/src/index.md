@@ -1,6 +1,6 @@
-# JIT.jl Intro
+# Catwalk.jl Intro
 
-JIT.jl can speed up long-running Julia processes by minimizing the
+Catwalk.jl can speed up long-running Julia processes by minimizing the
 overhead of dynamic dispatch.
 
 It profiles user-specified call sites, estimating the distribution of
@@ -19,9 +19,9 @@ compiled.
 ## When to use this package
 
 The dynamic dispatch in Julia is very fast in itself, so speeding it up is not an easy task.
-JIT.jl focuses on use cases when it is not feasible to list the dynamically dispatched concrete types in the source code of the call site.
+Catwalk.jl focuses on use cases when it is not feasible to list the dynamically dispatched concrete types in the source code of the call site.
 
-JIT.jl assumes the followings:
+Catwalk.jl assumes the followings:
 
 - The process is long running: at least 6 seconds, but possibly much more is needed to break even after the initial compilation overhead.
 - Few dynamically dispatched call sites contribute significantly to the running time (dynamic dispatch in a hot loop).

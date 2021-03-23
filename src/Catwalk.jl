@@ -1,9 +1,9 @@
 """
-    JIT.jl
+    Catwalk.jl
 
 An optimizing Just In Time compiler written in Julia.
 """
-module JIT
+module Catwalk
 
 export @jit, RuntimeOptimizer, CallBoost, ctx, SparseProfile, CallCtx
 

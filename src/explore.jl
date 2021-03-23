@@ -21,7 +21,7 @@ function exploreexpr(calledfn, argname)
     fnstr = string(calledfn) # Poor man's quote
     argnamestr = string(argname)
     return quote
-        JIT.log_callsite(JIT.explorer(jitctx), Symbol($fnstr), Symbol($argnamestr))
+        Catwalk.log_callsite(Catwalk.explorer(jitctx), Symbol($fnstr), Symbol($argnamestr))
     end
 end
 

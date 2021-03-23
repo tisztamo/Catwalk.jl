@@ -7,9 +7,9 @@ const sample_typelists = [
 ]
 
 @testset "Encode-decode" begin
-    @test JIT.encode(Int)() isa JIT.TypeListItem
+    @test Catwalk.encode(Int)() isa Catwalk.TypeListItem
     for typelist in sample_typelists
-        @test JIT.decode(JIT.encode(typelist...)) == typelist
+        @test Catwalk.decode(Catwalk.encode(typelist...)) == typelist
     end
 end
 
@@ -17,7 +17,7 @@ end
     for typelist in sample_typelists
         for l = 1:5
             if length(typelist) >= l
-                @test findfirst(typelist[l], JIT.encode(typelist...)) == l
+                @test findfirst(typelist[l], Catwalk.encode(typelist...)) == l
             end
         end
     end    

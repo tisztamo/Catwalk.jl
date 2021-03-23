@@ -25,13 +25,13 @@ mutable struct Scheduler{THooks, TMsg, TCoreState} <: AbstractScheduler{TMsg, TC
     Scheduler{T}() where T = new{T,T,T}([], Dict())
 end
 
-@jit step_kern1! (msg) function step!(scheduler::AbstractScheduler, jitctx=JIT.OptimizerCtx())
+@jit step_kern1! (msg) function step!(scheduler::AbstractScheduler, jitctx=Catwalk.OptimizerCtx())
     msg = popfirst!(scheduler.msgqueue)
     step_kern1!(msg, scheduler, jitctx)
     return nothing
 end
  
-@jit step_kern! (targetactor) function step_kern1!(msg, scheduler::AbstractScheduler, jitctx)
+@inline @jit step_kern! (targetactor) function step_kern1!(msg, scheduler::AbstractScheduler, jitctx)
     targetbox = target(msg).box::UInt64
     targetactor = get(scheduler.actorcache, targetbox, nothing)
     step_kern!(scheduler, msg, targetactor)
@@ -86,7 +86,7 @@ end
     push!(scheduler.msgqueue, Msg{Pong}(actor.addr, Pong()))
 end
 
-function measure_steps(scheduler, _ctx=JIT.OptimizerCtx(); num=STEPS_PER_ROUND)
+function measure_steps(scheduler, _ctx=Catwalk.OptimizerCtx(); num=STEPS_PER_ROUND)
     startts = time_ns()
     for i=1:num
         step!(scheduler, _ctx)
@@ -96,7 +96,7 @@ end
 
 function measure_steps2(scheduler, opt; num=STEPS_PER_ROUND)
     startts = time_ns()
-    JIT.step!(opt)
+    Catwalk.step!(opt)
     _ctx = ctx(opt)
     measure_steps(scheduler, _ctx)
     return time_ns() - startts
@@ -117,22 +117,21 @@ for i=1:10
     push!(scheduler.msgqueue, Msg{body}(Addr(42), body()))
 end
 push!(scheduler.msgqueue, Msg{Ping}(Addr(42), Ping()))
-#step!(scheduler)
 
 @testset "ping-pong" begin
     #msgcallboost = CallBoost(:step_kern1!, profilestrategy = SparseProfile(1.0))
     #actorcallboost = CallBoost(:step_kern!, profilestrategy = SparseProfile(1.0))
     optimizer = RuntimeOptimizer()
-    #JIT.add_boost!(optimizer, msgcallboost)
-    #JIT.add_boost!(optimizer, actorcallboost)
+    #Catwalk.add_boost!(optimizer, msgcallboost)
+    #Catwalk.add_boost!(optimizer, actorcallboost)
     normaltime = 0
     jittedtime = 0
     for i=1:300
-        println("------ JIT round #$(i): -------")
+        println("------ Catwalk round #$(i): -------")
         jittedtime += measure_steps2(scheduler, optimizer)
         normaltime += measure_steps_nojit!(scheduler)
         println(barplot(
-            ["JIT-ed", "original"],
+            ["Catwalked", "original"],
             [jittedtime / 1e9, normaltime / 1e9];
             title="Runtime"
         ))
