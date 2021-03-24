@@ -3,7 +3,6 @@ struct EmptyTypeList end
 const TypeList = Union{EmptyTypeList, TypeListItem}
 
 encode() = EmptyTypeList
-encode(t::UnionAll) = error("Do not jit-dispatch on a UnionAll type ($t). It is extremely slow.")
 encode(t) = TypeListItem{t, EmptyTypeList}
 encode(t, ts...) = TypeListItem{t, encode(ts...)}
 

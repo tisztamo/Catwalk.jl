@@ -46,8 +46,7 @@ function measure_typesweep(optimizer)
     startts = time_ns()
     @time for r = 1:500
         Catwalk.step!(optimizer)
-        jitctx = ctx(optimizer)
-        kernel(getcenter(r), jitctx)
+        kernel(getcenter(r), Catwalk.ctx(optimizer))
     end
     return time_ns() - startts
 end
@@ -66,9 +65,9 @@ end
     optimizer = RuntimeOptimizer()
     Catwalk.add_boost!(
         optimizer,
-        CallBoost(
+        Catwalk.CallBoost(
             :g,
-            profilestrategy = SparseProfile(0.02),
+            profilestrategy = Catwalk.SparseProfile(0.02),
             optimizer       = Catwalk.TopNOptimizer(50)
         )
     )
@@ -81,7 +80,7 @@ end
         Random.seed!(rng, r)
         nojit_result = f_nojit(center)
         Random.seed!(rng, r)
-        jit_result = f(center, ctx(optimizer))
-        @test  jit_result == nojit_result 
+        jit_result = f(center, Catwalk.ctx(optimizer))
+        @test jit_result == nojit_result 
     end
 end

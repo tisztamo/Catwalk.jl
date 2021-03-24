@@ -5,7 +5,7 @@ An optimizing Just In Time compiler written in Julia.
 """
 module Catwalk
 
-export @jit, RuntimeOptimizer, CallBoost, ctx, SparseProfile, CallCtx
+export @jit, RuntimeOptimizer
 
 include("typelist.jl")
 include("frequencies.jl")
@@ -15,7 +15,7 @@ include("costmodel.jl")
 include("optimize.jl")
 include("explore.jl")
 
-mutable struct CallBoost # TODO: worth parametrizing?
+mutable struct CallBoost
     fnsym::Symbol
     profilestrategy::ProfileStrategy
     optimizer::Optimizer
@@ -101,14 +101,9 @@ function callctx(::Type{
     name = nameof(key)
     idx = findfirst(n -> n==name, TNames)
     if isnothing(idx)
-        #error("$key not found in $ctxs")
-        return typeof(CallCtx())
+        error("$key not found in $ctxs")
     end
     return fieldtypes(TVals)[idx]
-end
-
-function callctx(::Type{NamedTuple}, key)
-    return typeof(CallCtx()) # TODO eliminate?
 end
 
 function explorer(::Type{

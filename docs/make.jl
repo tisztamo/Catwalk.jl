@@ -1,11 +1,13 @@
-using Documenter, Catwalk
+using Documenter, Catwalk, Literate
+
+Literate.markdown("docs/src/usage.jl", "docs/src"; documenter=false, execute=false)
 
 makedocs(
     modules = [Catwalk],
     format = Documenter.HTML(; prettyurls = get(ENV, "CI", nothing) == "true"),
     authors = "Krisztián Schäffer",
     sitename = "Catwalk.jl",
-    pages = Any["index.md", "usage.md"]
+    pages = Any["index.md", "usage.md"],
     # strict = true,
     # clean = true,
     # checkdocs = :exports,

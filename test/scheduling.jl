@@ -86,10 +86,10 @@ end
     push!(scheduler.msgqueue, Msg{Pong}(actor.addr, Pong()))
 end
 
-function measure_steps(scheduler, _ctx=Catwalk.OptimizerCtx(); num=STEPS_PER_ROUND)
+function measure_steps(scheduler, ctx=Catwalk.OptimizerCtx(); num=STEPS_PER_ROUND)
     startts = time_ns()
     for i=1:num
-        step!(scheduler, _ctx)
+        step!(scheduler, ctx)
     end
     return time_ns() - startts
 end
@@ -97,8 +97,7 @@ end
 function measure_steps2(scheduler, opt; num=STEPS_PER_ROUND)
     startts = time_ns()
     Catwalk.step!(opt)
-    _ctx = ctx(opt)
-    measure_steps(scheduler, _ctx)
+    measure_steps(scheduler, Catwalk.ctx(opt))
     return time_ns() - startts
 end
 

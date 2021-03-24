@@ -27,7 +27,7 @@ function costof(
     return total
 end
 
-# Returns (skipcost, isstatic)
+# Return (skipcost, isstatic)
 function calc_skipcost(type, freq, fixtypes, costmodel)
     idx = findfirst(type, fixtypes)
     perskip_cost = costmodel.skip * freq

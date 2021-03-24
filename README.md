@@ -13,3 +13,5 @@
 -->
 
 [![CI](https://github.com/tisztamo/Catwalk.jl/actions/workflows/ci.yml/badge.svg)](https://github.com/tisztamo/Catwalk.jl/actions/workflows/ci.yml)
+
+![Speedup demo](docs/assets/catwalk-speeddemo.gif)

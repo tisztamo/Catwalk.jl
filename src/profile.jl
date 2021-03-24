@@ -1,6 +1,6 @@
 using Random
 
-rng = MersenneTwister(42)
+rng = MersenneTwister()
 
 abstract type Profiler end
 
