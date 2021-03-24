@@ -1,7 +1,8 @@
 # Catwalk.jl Intro
 
 Catwalk.jl can speed up long-running Julia processes by minimizing the
-overhead of dynamic dispatch.
+overhead of dynamic dispatch. It is a JIT compiler that continuosly
+re-optimizes dispatch code based on data collected at runtime.
 
 ![Speedup demo](assets/catwalk-speeddemo.gif)
 
@@ -31,6 +32,7 @@ Catwalk.jl assumes the followings:
 
 ## Alternatives
 
-- [FunctionWrappers.jl](https://github.com/yuyichao/FunctionWrappers.jl) will get you type stability for a fixed (?) cost.
 - [ManualDispatch.jl](https://github.com/jlapeyre/ManualDispatch.jl) can serve you better in less dynamic cases, when it is feasible to list the dynamically dispatched types in the source code.
 - In even simpler cases using unions instead of a type hierarchy may allow the Julia compiler to "split the union". See for example [List performance improvent by Union-typed tail](https://github.com/JuliaCollections/DataStructures.jl/pull/682/commits/4742228d42ae441f9837e5825feedeb1c013bd99) in DataStructures.jl.
+- [FunctionWrappers.jl](https://github.com/yuyichao/FunctionWrappers.jl) will give you type stability for a fixed (?) cost. Its use case is different, but if you are wrestling with type instabilities, take a look at it first.
+- [FunctionWranglers.jl](https://github.com/tisztamo/FunctionWranglers.jl) allows fast, inlined execution of functions provided in an array - for that use case it is a better choice than Catwalk.jl.

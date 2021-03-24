@@ -120,7 +120,7 @@ push!(scheduler.msgqueue, Msg{Ping}(Addr(42), Ping()))
 @testset "ping-pong" begin
     #msgcallboost = CallBoost(:step_kern1!, profilestrategy = SparseProfile(1.0))
     #actorcallboost = CallBoost(:step_kern!, profilestrategy = SparseProfile(1.0))
-    optimizer = RuntimeOptimizer()
+    optimizer = JIT()
     #Catwalk.add_boost!(optimizer, msgcallboost)
     #Catwalk.add_boost!(optimizer, actorcallboost)
     normaltime = 0

@@ -7,7 +7,7 @@ makedocs(
     format = Documenter.HTML(; prettyurls = get(ENV, "CI", nothing) == "true"),
     authors = "Krisztián Schäffer",
     sitename = "Catwalk.jl",
-    pages = Any["index.md", "usage.md"],
+    pages = Any["index.md", "usage.md", "howitworks.md", "tuning.md"],
     # strict = true,
     # clean = true,
     # checkdocs = :exports,

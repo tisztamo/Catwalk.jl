@@ -62,7 +62,7 @@ end
 
 @testset "Type sweep" begin
     println("Measuring performance in a type-sweep scenario")
-    optimizer = RuntimeOptimizer()
+    optimizer = JIT()
     Catwalk.add_boost!(
         optimizer,
         Catwalk.CallBoost(

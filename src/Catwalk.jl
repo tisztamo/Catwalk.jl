@@ -5,7 +5,7 @@ An optimizing Just In Time compiler written in Julia.
 """
 module Catwalk
 
-export @jit, RuntimeOptimizer
+export @jit, JIT
 
 include("typelist.jl")
 include("frequencies.jl")
@@ -45,34 +45,34 @@ end
 fixtypes(::Type{CallCtx{TProfiler, TFixtypes}}) where {TProfiler, TFixtypes} = TFixtypes
 profiler(ctx::CallCtx) = ctx.profiler
 
-struct RuntimeOptimizer
+struct JIT
     id::Int
     callboosts::Vector{CallBoost}
     explorer::Explorer
 end
-function RuntimeOptimizer(callboosts...; explorertype=BasicExplorer)
+function JIT(callboosts...; explorertype=BasicExplorer)
     id = rand(Int)
-    opt = RuntimeOptimizer(id, [], explorertype(id))
+    opt = JIT(id, [], explorertype(id))
     for boost in callboosts
         add_boost!(opt, boost)
     end
     return opt
 end
 
-optimizerid(opt::RuntimeOptimizer) = opt.id
+optimizerid(opt::JIT) = opt.id
 
-function add_boost!(opt::RuntimeOptimizer, boost)
+function add_boost!(opt::JIT, boost)
     push!(opt.callboosts, boost)
     register_callsite!(opt.id, boost.fnsym)
 end
 
-function step!(opt::RuntimeOptimizer)
+function step!(opt::JIT)
     update_callboosts(opt)
     step!.(opt.callboosts)
     step!(opt.explorer)
 end
 
-function update_callboosts(opt::RuntimeOptimizer)
+function update_callboosts(opt::JIT)
     currentsyms = Set(map(b -> b.fnsym, opt.callboosts))
     for newsite in setdiff(get_freshcallsites!(opt.id), currentsyms)
         add_boost!(opt, CallBoost(newsite))
@@ -86,7 +86,7 @@ struct OptimizerCtx{TCallCtxs, TExplorer}
     OptimizerCtx(optimizerid, callctxs, explorer) = new{typeof(callctxs), typeof(explorer)}(callctxs, explorer)
 end
 
-function ctx(opt::RuntimeOptimizer)
+function ctx(opt::JIT)
     callctxs = (;map(boost -> (boost.fnsym, ctx(boost)), opt.callboosts)...)
     return OptimizerCtx(optimizerid(opt), callctxs, opt.explorer)
 end
