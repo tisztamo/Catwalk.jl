@@ -2,8 +2,10 @@
 
 # Let's say you have a long-running calculation, organized into batches:
 
+const NUM_BATCHES = 1000
+
 function runbatches()
-    for batchidx = 1:1000
+    for batchidx = 1:NUM_BATCHES
         hotloop()
         ## Log progress, etc.
     end
@@ -12,8 +14,10 @@ end
 # The hot loop calls the type-unstable function `get_some_x()` and 
 # passes its result to a relatively cheap calculation `calc_with_x()`.
 
+const NUM_ITERS_PER_BATCH = 1_000_000
+
 function hotloop()
-    for i = 1:1_000_000
+    for i = 1:NUM_ITERS_PER_BATCH
         x = get_some_x(i)
         calc_with_x(x)
     end
@@ -34,8 +38,7 @@ end
 # * Sometimes it is not feasible to type-stabilize `get_some_x`. *
 #
 # Catwalk.jl is here for those cases. 
-# You mark `hotloop`, the outer function (the one which has the
-# dynamic call site in its body)
+# You mark `hotloop`, the outer function
 # with the `@jit` macro and provide the name of the dynamically
 # dispatched function
 # and the argument to operate on (the API will hopefully
@@ -45,7 +48,7 @@ end
 using Catwalk
 
 @jit calc_with_x x function hotloop_jit(jitctx)
-    for i = 1:1_000_000
+    for i = 1:NUM_ITERS_PER_BATCH
         x = get_some_x(i)
         calc_with_x(x)
     end
@@ -53,13 +56,13 @@ end
 
 # The Catwalk optimizer will provide you the `jitctx` context which you have to pass
 # to the jit-ed function manually.
-# Also, every batch needs a bit more housekeeping to drive the Catwalk optimizer:
+# Also, every batch needs a bit housekeeping to drive the Catwalk optimizer:
 
 function runbatches_jit()
-    opt = Catwalk.RuntimeOptimizer()
-    for batch = 1:1000
-        Catwalk.step!(opt)
-        hotloop_jit(Catwalk.ctx(opt))
+    jit = Catwalk.JIT()
+    for batch = 1:NUM_BATCHES
+        Catwalk.step!(jit)
+        hotloop_jit(Catwalk.ctx(jit))
     end
 end
 
