@@ -118,11 +118,11 @@ end
 push!(scheduler.msgqueue, Msg{Ping}(Addr(42), Ping()))
 
 @testset "ping-pong" begin
-    #msgcallboost = CallBoost(:step_kern1!, profilestrategy = SparseProfile(1.0))
-    #actorcallboost = CallBoost(:step_kern!, profilestrategy = SparseProfile(1.0))
-    optimizer = JIT()
-    #Catwalk.add_boost!(optimizer, msgcallboost)
-    #Catwalk.add_boost!(optimizer, actorcallboost)
+    msgcallboost = Catwalk.CallBoost(:step_kern1!, profilestrategy = Catwalk.SparseProfile(0.02))
+    actorcallboost = Catwalk.CallBoost(:step_kern!, profilestrategy = Catwalk.SparseProfile(0.01))
+    optimizer = JIT(;explorertype=Catwalk.NoExplorer)
+    Catwalk.add_boost!(optimizer, msgcallboost)
+    Catwalk.add_boost!(optimizer, actorcallboost)
     normaltime = 0
     jittedtime = 0
     for i=1:300

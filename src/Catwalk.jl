@@ -63,7 +63,7 @@ optimizerid(opt::JIT) = opt.id
 
 function add_boost!(opt::JIT, boost)
     push!(opt.callboosts, boost)
-    register_callsite!(opt.id, boost.fnsym)
+    register_callsite!(opt.explorer, boost.fnsym)
 end
 
 function step!(opt::JIT)

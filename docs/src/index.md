@@ -5,6 +5,7 @@ overhead of dynamic dispatch. It is a JIT compiler that continuosly
 re-optimizes dispatch code based on data collected at runtime.
 
 ![Speedup demo](assets/catwalk-speeddemo.gif)
+[source code of this test](https://github.com/tisztamo/Catwalk.jl/blob/main/test/scheduling.jl)
 
 It profiles user-specified call sites, estimating the distribution of
 dynamically dispatched types during runtime, and generates fast

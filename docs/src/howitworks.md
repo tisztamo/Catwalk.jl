@@ -42,7 +42,7 @@ end
 
 The `FullProfiler` collects statistics from every call.
 It logs a call faster than a dynamic dispatch, but running
-it in every batch would still eat most of the cake, so it
+it in every batch would still eat a large part of the cake, so it
 is sparsely used, with 1% probability by default (It is
 always active during the first two batches). 
 
