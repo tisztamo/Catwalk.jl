@@ -1,15 +1,14 @@
 function jitexpr(funexpr, callname, argname, fixtypes)
     retval = Expr(:block)
     push!(retval.args, profileexpr(callname, argname))
+    next_target = retval.args
     for fixtype in fixtypes
         @assert fixtype isa Type
-        push!(retval.args, quote
-            if $argname isa $fixtype
-                return $funexpr
-            end
-        end)
+        ex = Expr(:if, :($argname isa $fixtype), :($funexpr))
+        push!(next_target, ex)
+        next_target = ex.args
     end
-    push!(retval.args, funexpr)
+    push!(next_target, funexpr)
     return retval
 end
 
