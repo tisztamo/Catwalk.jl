@@ -70,12 +70,13 @@ struct BasicExplorer{TOptimizerId} <: Explorer end
 
 Here Catwalk - just like many other meta-heavy Julia packages -
 violates the rule that a `@generated` function is not "allowed"
-to access mutable global state. It logs the call site to a global
-dict, keyed with its id, from where the JIT compiler can read it out.
+to access mutable global state. The explorer logs the call site to
+a global dict, keyed with its id, from where the JIT compiler
+can read it out during the next batch.
 
-It seems impossible to push back information from the compilation process
+It seems impossible to send back information from the compilation process
 without breaking this rule, and pushing the exploration to the tight loop
-we is not feasible.
+is not feasible.
 
 The alternative is to configure the compiler with the call sites
 and `NoExplorer` manually. TODO: link to tuning, when documented.

@@ -60,6 +60,7 @@ function measure_typesweep_nojit()
     return time_ns() - startts
 end
 
+
 @testset "Type sweep" begin
     println("Measuring performance in a type-sweep scenario")
     optimizer = JIT()
@@ -67,8 +68,15 @@ end
         optimizer,
         Catwalk.CallBoost(
             :g,
-            profilestrategy = Catwalk.SparseProfile(0.02),
-            optimizer       = Catwalk.TopNOptimizer(50)
+            profilestrategy  =  Catwalk.SparseProfile(0.02),
+            optimizer        =  Catwalk.TopNOptimizer(50;
+                                    compile_threshold = 1.1,
+                                    costmodel = Catwalk.DefaultDispatchCostModel(
+                                        skip                = 1,
+                                        static_dispatch     = 8,
+                                        dynamic_dispatch    = 1000,
+                                    )
+                                )
         )
     )
     jittedtime = measure_typesweep(optimizer)

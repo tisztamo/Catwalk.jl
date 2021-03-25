@@ -35,9 +35,9 @@ end
 # As `get_some_x` is not type-stable, `calc_with_x` must be dynamically
 # dispatched, which slows down the calculation.
 #
-# * Sometimes it is not feasible to type-stabilize `get_some_x`. *
-#
-# Catwalk.jl is here for those cases. 
+# Sometimes it is not feasible to type-stabilize `get_some_x`.
+# Catwalk.jl is here for those cases.
+# 
 # You mark `hotloop`, the outer function
 # with the `@jit` macro and provide the name of the dynamically
 # dispatched function
@@ -59,7 +59,7 @@ end
 # Also, every batch needs a bit housekeeping to drive the Catwalk optimizer:
 
 function runbatches_jit()
-    jit = Catwalk.JIT()
+    jit = Catwalk.JIT() ## Also works inside a function (no eval used)
     for batch = 1:NUM_BATCHES
         Catwalk.step!(jit)
         hotloop_jit(Catwalk.ctx(jit))
