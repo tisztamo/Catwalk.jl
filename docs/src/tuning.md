@@ -1,6 +1,6 @@
 # Configuration & tuning
 
-Catwalk.jl comes with resonable default configs,
+Catwalk.jl comes with reasonable default configs,
 but it also allows you to tweak its behavior.
 
 To monitor its inner workings, start Julia with `JULIA_DEBUG=Catwalk`.
@@ -48,11 +48,14 @@ not change significantly during the full run, you can set the sparsity to 0.
 
 You can configure different optimizers for every call site.
 Currently only the `TopNOptimizer` if available, which generates
-fast routes for up to N types, where N is a type parameter (10 by default).
+fast routes for up to the given number of types (10 by default).
 
 ```
 boost1 = Catwalk.CallBoost(:calc_with_x; optimizer = Catwalk.TopNOptimizer(50))
 ```
+
+I plan to add an optimizer that calculates marginal utility to decide the
+number of fast routes, so that tuning N becomes unnecessary.
 
 ### Tune compilation overhead
 
