@@ -3,6 +3,8 @@
 Catwalk.jl comes with resonable default configs,
 but it also allows you to tweak its behavior.
 
+To monitor its inner workings, start Julia with `JULIA_DEBUG=Catwalk`.
+
 ## Set up call sites
 
 As most of the configuration is done per call site,
@@ -88,7 +90,7 @@ the cost model for your case. (It is also possible to define new model types, bu
 # A fully tuned example
 
 ```julia
-    optimizer = JIT()
+    optimizer = JIT(;explorertype = Catwalk.NoExplorer)
     Catwalk.add_boost!(
         optimizer,
         Catwalk.CallBoost(

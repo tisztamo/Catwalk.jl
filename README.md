@@ -25,8 +25,8 @@ to handle situations where the distribution of dispatched types
 changes relatively fast.
 
 To minimize compilation overhead, recompilation only occurs when the
-distribution changed enough so that the  included cost model predicts
+distribution changed enough and the tunable cost model predicts
 significant speedup compared to the best version that was previously
 compiled.
 
-[Documentation (dev)]((https://tisztamo.github.io/Catwalk.jl/dev/))
+[Documentation (dev)](https://tisztamo.github.io/Catwalk.jl/dev/)
