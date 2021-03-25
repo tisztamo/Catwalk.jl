@@ -21,7 +21,7 @@ function costof(
     total = 0
     for f in typefreqs
         skipcost, isstatic = calc_skipcost(f.type, f.freq, fixtypes, costmodel)
-        dispatchcost = isstatic ? costmodel.static_dispatch : costmodel.dynamic_dispatch
+        dispatchcost = f.freq * (isstatic ? costmodel.static_dispatch : costmodel.dynamic_dispatch)
         total += skipcost + dispatchcost
     end
     return total

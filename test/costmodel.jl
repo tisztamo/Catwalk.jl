@@ -13,9 +13,9 @@ for i =1:7 Catwalk.increment!(testfreqs, Float64) end
 @testset "Cost Model" begin
     @test Catwalk.costof(values(testfreqs), Catwalk.encode(Float16, Int, Float32), testmodel) ==
     (
-        3   * 2 * testmodel.skip + testmodel.static_dispatch +
-        111 * 1 * testmodel.skip + testmodel.static_dispatch +
-        5   * 3 * testmodel.skip + testmodel.static_dispatch +
-        7   * 3 + testmodel.dynamic_dispatch
+        3   * (2 * testmodel.skip + testmodel.static_dispatch) +
+        111 * (1 * testmodel.skip + testmodel.static_dispatch) +
+        5   * (3 * testmodel.skip + testmodel.static_dispatch) +
+        7   * (3 + testmodel.dynamic_dispatch)
     )
 end

@@ -63,18 +63,18 @@ end
 
 @testset "Type sweep" begin
     println("Measuring performance in a type-sweep scenario")
-    optimizer = JIT()
+    optimizer = JIT(;explorertype = Catwalk.NoExplorer)
     Catwalk.add_boost!(
         optimizer,
         Catwalk.CallBoost(
             :g,
             profilestrategy  =  Catwalk.SparseProfile(0.02),
             optimizer        =  Catwalk.TopNOptimizer(50;
-                                    compile_threshold = 1.1,
+                                    compile_threshold = 1.15,
                                     costmodel = Catwalk.DefaultDispatchCostModel(
-                                        skip                = 1,
+                                        skip                = 2,
                                         static_dispatch     = 8,
-                                        dynamic_dispatch    = 1000,
+                                        dynamic_dispatch    = 100,
                                     )
                                 )
         )
