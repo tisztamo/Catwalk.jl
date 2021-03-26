@@ -56,6 +56,7 @@ function fixtypes(opt::TopNOptimizer, prof::FullProfiler)
     return opt.last_fixtypes
 end
 
+# The N most frequent first types encoded
 function ideal_fixtypes(opt::TopNOptimizer, prof::FullProfiler)
     freqs = sort(collect(typefreqs(prof)); order=Base.Order.ReverseOrdering())
     topfreqs = freqs[1:min(opt.n, length(freqs))]

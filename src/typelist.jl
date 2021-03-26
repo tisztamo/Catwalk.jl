@@ -8,15 +8,15 @@ encode(t, ts...) = TypeListItem{t, encode(ts...)}
 
 decode(t::Tuple) = t
 decode(::Type{EmptyTypeList}) = ()
-decode(w::Type{TypeListItem{TThis, EmptyTypeList}}) where TThis = (TThis,)
-decode(w::Type{TypeListItem{TThis, TNext}}) where {TThis, TNext} = (TThis, decode(TNext)...)
+decode(::Type{TypeListItem{TThis, EmptyTypeList}}) where TThis = (TThis,)
+decode(::Type{TypeListItem{TThis, TNext}}) where {TThis, TNext} = (TThis, decode(TNext)...)
 
 Base.length(::Type{EmptyTypeList}) = 0
 function Base.length(::Type{TypeListItem{TThis, TNext}}) where {TThis, TNext}
     return 1 + length(TNext)
 end
 
-Base.findfirst(t::Type, ::Type{EmptyTypeList}) = nothing
+Base.findfirst(::Type, ::Type{EmptyTypeList}) = nothing
 function Base.findfirst(t::Type, ::Type{TypeListItem{TThis, TNext}}) where {TThis, TNext}
     t == TThis && return 1
     tailidx = findfirst(t, TNext)

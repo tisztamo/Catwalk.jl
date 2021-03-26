@@ -1,3 +1,4 @@
+# Creates the expression that should replace the original call
 function jitexpr(funexpr, callname, argname, fixtypes)
     retval = Expr(:block)
     push!(retval.args, profileexpr(callname, argname))

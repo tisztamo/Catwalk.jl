@@ -14,14 +14,15 @@ const basemodel = DefaultDispatchCostModel(
 )
 
 function costof(
-    typefreqs, # iterable over Frequency-s 
-    fixtypes,
-    costmodel::DispatchCostModel = basemodel
-    )
+            typefreqs, # iterable over Frequency-s 
+            fixtypes,
+            costmodel::DispatchCostModel = basemodel
+        )
     total = 0
     for f in typefreqs
         skipcost, isstatic = calc_skipcost(f.type, f.freq, fixtypes, costmodel)
-        dispatchcost = f.freq * (isstatic ? costmodel.static_dispatch : costmodel.dynamic_dispatch)
+        dispatchcost = f.freq * (isstatic ? costmodel.static_dispatch
+                                          : costmodel.dynamic_dispatch)
         total += skipcost + dispatchcost
     end
     return total
