@@ -33,6 +33,7 @@ Catwalk.jl assumes the followings:
 
 ## Alternatives
 
+- JuliaFolds packages in general try to do a weaker version of this, as discussed in: [Tail-call optimization and function-barrier -based accumulation in loops](https://discourse.julialang.org/t/tail-call-optimization-and-function-barrier-based-accumulation-in-loops/25831).
 - [ManualDispatch.jl](https://github.com/jlapeyre/ManualDispatch.jl) can serve you better in less dynamic cases, when it is feasible to list the dynamically dispatched types in the source code.
 - In even simpler cases using unions instead of a type hierarchy may allow the Julia compiler to "split the union". See for example [List performance improvent by Union-typed tail](https://github.com/JuliaCollections/DataStructures.jl/pull/682/commits/4742228d42ae441f9837e5825feedeb1c013bd99) in DataStructures.jl.
 - [FunctionWrappers.jl](https://github.com/yuyichao/FunctionWrappers.jl) will give you type stability for a fixed (?) cost. Its use case is different, but if you are wrestling with type instabilities, take a look at it first.
