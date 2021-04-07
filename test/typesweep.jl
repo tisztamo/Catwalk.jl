@@ -63,7 +63,7 @@ end
 
 @testset "Type sweep" begin
     println("Measuring performance in a type-sweep scenario")
-    optimizer = JIT(;explorertype = Catwalk.NoExplorer)
+    optimizer = JIT(;explorerfactory = Catwalk.NoExplorer)
     Catwalk.add_boost!(
         optimizer,
         Catwalk.CallBoost(

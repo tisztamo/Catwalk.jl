@@ -26,7 +26,7 @@ When all the call sites are set up, you can turn off
 exploring:
 
 ```
-jit = Catwalk.JIT(boost1, boost2; explorertype = Catwalk.NoExplorer)
+jit = Catwalk.JIT(boost1, boost2; explorerfactory = Catwalk.NoExplorer)
 ```
 
 ## Customize Profiling
@@ -93,7 +93,7 @@ the cost model for your case. (It is also possible to define new model types, bu
 # A fully tuned example
 
 ```julia
-    optimizer = JIT(;explorertype = Catwalk.NoExplorer)
+    optimizer = JIT(;explorerfactory = Catwalk.NoExplorer)
     Catwalk.add_boost!(
         optimizer,
         Catwalk.CallBoost(

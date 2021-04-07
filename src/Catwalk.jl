@@ -50,9 +50,9 @@ struct JIT
     callboosts::Vector{CallBoost}
     explorer::Explorer
 end
-function JIT(callboosts...; explorertype=BasicExplorer)
+function JIT(callboosts...; explorerfactory=BasicExplorer)
     id = rand(Int)
-    jit = JIT(id, [], explorertype(id))
+    jit = JIT(id, [], explorerfactory(id))
     for boost in callboosts
         add_boost!(jit, boost)
     end
