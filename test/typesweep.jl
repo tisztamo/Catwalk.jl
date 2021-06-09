@@ -89,6 +89,6 @@ end
         nojit_result = f_nojit(center)
         Random.seed!(rng, r)
         jit_result = f(center, Catwalk.ctx(optimizer))
-        @test jit_result == nojit_result 
+        @test jit_result == nojit_result
     end
 end
