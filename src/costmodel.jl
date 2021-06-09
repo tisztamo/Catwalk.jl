@@ -10,7 +10,7 @@ end
 const basemodel = DefaultDispatchCostModel(
     skip                = 3,
     static_dispatch     = 8,
-    dynamic_dispatch    = 100,
+    dynamic_dispatch    = 2000,
 )
 
 function costof(
