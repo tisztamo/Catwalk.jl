@@ -63,7 +63,7 @@ end
 
 @testset "Type sweep" begin
     println("Measuring performance in a type-sweep scenario")
-    optimizer = JIT(;explorertype = Catwalk.NoExplorer)
+    optimizer = JIT(;explorerfactory = Catwalk.NoExplorer)
     Catwalk.add_boost!(
         optimizer,
         Catwalk.CallBoost(
@@ -89,6 +89,6 @@ end
         nojit_result = f_nojit(center)
         Random.seed!(rng, r)
         jit_result = f(center, Catwalk.ctx(optimizer))
-        @test jit_result == nojit_result 
+        @test jit_result == nojit_result
     end
 end
