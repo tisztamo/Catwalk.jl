@@ -95,11 +95,11 @@ function callctx(::Type{OptimizerCtx{TCallCtxs, TExplorer}}, key) where {TCallCt
     return callctx(TCallCtxs, key)
 end
 
-function callctx(::Type{NamedTuple{TNames, TVals}}, key) where {TNames, TVals}
+function callctx(ctxs::Type{NamedTuple{TNames, TVals}}, key) where {TNames, TVals}
     name = nameof(key)
     idx = findfirst(n -> n == name, TNames)
     if isnothing(idx)
-        error("$key not found in $ctxs")
+        error("$name (type: $(typeof(name))) not found in $ctxs")
     end
     return fieldtypes(TVals)[idx]
 end
