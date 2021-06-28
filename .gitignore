@@ -5,3 +5,4 @@
 /docs/build
 /docs/src/usage.md
 Manifest.toml
+.vscode/
