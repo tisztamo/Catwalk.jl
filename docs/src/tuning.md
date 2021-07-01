@@ -65,8 +65,8 @@ Set it to a higher value if you think there is too much compilation.
 The optimizer maintains a list of all previous compilations
 and finds the best one from them for the current profile,
 based on the cost model. If the cost of that historic best
-compilation is not larger than the ideal one generated
-for the current profile multiplied with `compile_threshold`,
+compilation is not larger than the cost of the ideal one generated
+for the current profile, multiplied with `compile_threshold`,
 then the historic one will be reused.
 
 ### Customize the cost model

@@ -1,11 +1,7 @@
 # ## Catwalk.jl 8-min intro
 # Krisztián Schäffer, JuliaCon 2021
 
-# We will performance-optimize a Rock-Paper-Scissors simulation.
-# 
-# (Example was inspired by https://giordano.github.io/blog/2017-11-03-rock-paper-scissors/)
-
-# We model player moves with types:
+# Performance-optimization of a Rock-Paper-Scissors "simulation".
 
 abstract type Hand end
 struct Rock <: Hand end
@@ -20,6 +16,8 @@ play(a, b) = 3 - play(b, a) # Reverse order. 3-1 == 2: second player wins
 
 play(Paper(), Scissors()) # Scissors cuts paper, second player wins
 
+# (Example was inspired by https://giordano.github.io/blog/2017-11-03-rock-paper-scissors/)
+
 # ---
 # A single play by two random players:
 
@@ -28,13 +26,13 @@ function playrand(hands)
     hand2 = rand(hands)
     return play(hand1, hand2)
 end
+nothing # hide
 
-# ---
 # Type instability causes dynamic (run-time) dispatch:
 
 const hands = [Rock(), Paper(), Scissors()]
 
-using InteractiveUtils
+using InteractiveUtils # hide
 @code_warntype playrand(hands)
 
 # ---
@@ -46,6 +44,11 @@ function playmatch(hands, num_plays, result)
         result[winner] += 1
     end
 end
+
+result = [0, 0, 0]
+playmatch(hands, 10_000, result)
+
+result
 
 # ---
 # all-play-all tournament of num_players:
@@ -66,15 +69,13 @@ tournament(hands, 5)
 # Performance:
 
 @time tournament(hands, 100)
-nothing
+nothing # hide
 
 # Speed it up!
 
-# ##### Option 1: Redesign
-# ...
+# ##### Option 1: Redesign ...
 
-# ##### Option 2: Union spliting
-# ...
+# ##### Option 2: Union spliting ...
 
 # ##### Option 3: Dispatch manually:
 
@@ -90,6 +91,7 @@ function playrand_manualdispatch(hands)
     end
     return play(hand1, hand2) # Fallback to fully dynamic dispatch
 end
+nothing # hide
 
 # (ManualDispatch.jl may help, but not in this 2-args case)
 
@@ -122,19 +124,21 @@ function tournament_jit(hands, num_players, jit=Catwalk.JIT())
     end
     return results
 end
+nothing # hide
 
 # ---
 const jit = Catwalk.JIT()
+
 @time tournament_jit(hands, 100, jit)
-nothing
+nothing # hide
 
 # Hot start:
 
 @time tournament_jit(hands, 100, jit)
-nothing
+nothing # hide
 
 # ---
-# Catwalk.jl highlights: 
+# ### Catwalk.jl highlights: 
 #
 #   - Low cost statistical profiler
 #   - Tunable cost model

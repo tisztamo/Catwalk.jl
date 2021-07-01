@@ -44,14 +44,14 @@ function fixtypes(opt::TopNOptimizer, prof::FullProfiler)
         @debug begin
             lastcost = costof(typefreqs(prof), opt.last_fixtypes, opt.costmodel)
             speedup_last = percent(1.0 - idealcost / lastcost)
-            speedup_best = percent(1.0 - idealcost / best_historic_cost)
-            "Selected new fixtype list for $(speedup_last)% speedup vs last used, and $(speedup_best)% vs best: $ideal"
+            speedup_best = best_historic_cost == typemax(Int) ? speedup_last : percent(1.0 - idealcost / best_historic_cost)
+            "Selected new fixtype list for $(speedup_last)% speedup vs last used, and $(speedup_best)% vs best: $(Catwalk.pretty(ideal))"
         end
         opt.last_fixtypes = ideal
         push!(opt.fixtypes_history, ideal)
     else
-        @debug "Selected previous fixtype list: $ideal"
         opt.last_fixtypes = opt.fixtypes_history[best_idx]
+        @debug "Selected previous fixtype list: $(Catwalk.pretty(opt.last_fixtypes))"
     end
     return opt.last_fixtypes
 end

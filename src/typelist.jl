@@ -22,3 +22,10 @@ function Base.findfirst(t::Type, ::Type{TypeListItem{TThis, TNext}}) where {TThi
     tailidx = findfirst(t, TNext)
     return isnothing(tailidx) ? nothing : tailidx + 1
 end
+
+pretty(::Type{TypeListItem{TThis, TNext}}) where {TThis, TNext} = begin
+    return "$(TThis), " * pretty(TNext)
+end
+
+pretty(::Type{EmptyTypeList}) = ""
+
