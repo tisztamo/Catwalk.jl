@@ -1,0 +1,18 @@
+.small {
+    font-size:60%;
+}
+
+.log {
+    display: block;
+    font-size:80%;
+    font-family: monospace;
+}
+
+.blur {
+    color: gray;
+}
+
+.title {
+    font-size:140%;
+    font-family: monospace;
+}
