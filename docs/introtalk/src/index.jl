@@ -31,8 +31,10 @@
 #
 # Julia on the other hand can switch between execution and compilation.
 # Code generation will be deferred to the latest possible point: Just before
-# execution. The compiler has more information at that time, which it can use to
+# execution of that piece of code.
+# The compiler has more information at that time, which it can use to
 # optimize better.
+#
 # However, in Julia we typically only lay new tracks, and don't
 # renew existing ones.
 # Once a code was compiled, it is not really possible to recompile it, 
@@ -71,6 +73,7 @@ play(Paper(), Scissors()) # Scissors cuts paper, second player wins
 #
 # Let's see how it works.
 # This is a classic example of the rock-paper-scissors game.
+#
 # Hands are modeled with types and game logic is implemented using multiple dispatch.
 # The play function returns one if the first player wins, two if the second,
 # and three on tie.
@@ -94,8 +97,9 @@ nothing # hide
 # By the nature of our design the call to `play` is dynamically dispatched at run-time,
 # because all we know is that both hand1 and hand2 are subtypes of the
 # abstract type Hand.
-# This dynamic dispatch is where most of the runtime is spent, so we will try
-# to speed it up.
+#
+# This dynamic dispatch implements our main logic, and it is where most of the runtime is spent.
+# We will try to speed it up.
 
 # ---
 # ### Play repeatedly and count results
@@ -115,8 +119,10 @@ result
 # ???
 #
 # Let's say that the `playrand` function is called in a hot loop.
+#
 # Why? Well, if it is not called in a hot loop, then there is hardly a
 # reason to speed it up.
+#
 # So a match is a sequence of plays between two players. We count
 # the results in an array.
 
@@ -199,6 +205,8 @@ nothing # hide
 # which limits extensibility. If you want to introduce a new hand and still run fast,
 # you have to change this code. That may not be feasible.
 #
+# So we arrive at Catwalk. It will automatically generate code that looks like this
+
 # ---
 
 using Catwalk
@@ -230,7 +238,7 @@ nothing # hide
 
 # ???
 #
-# So we arrive at Catwalk. Let's see what we have to modify in our code.
+# Let's see what we have to modify in our code.
 # We mark `playrand` with the `@jit` macro and provide the name of the
 # dynamically dispatched function, `play` and the argument to stabilize, `hand1`.
 #
@@ -333,8 +341,9 @@ Catwalk.add_boost!(
 #
 # ???
 #
-# One more thing: There is no magic here. If you are a relative beginer to Julia,
-# I suggest you to check the source code of Catwalk. It is simpler than you may think.
+# One more thing: We had no time to look inside, but there is no magic here.
+# Even if you are a relative beginner to Julia, I suggest you to check the source
+# code of Catwalk. It is simpler than you may think.
 # But be warned: Metaprogramming is a rabbit hole!
 #
 # Thank you for your attention!
