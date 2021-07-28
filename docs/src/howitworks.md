@@ -1,5 +1,7 @@
 # How it works?
 
+## Generated code
+
 The `@jit` macro turns the outer function to a `@generated` one,
 so that we can recompile with reoptimized source code at will.
 
@@ -19,17 +21,23 @@ The optimized code looks like this:
     end
 ```
 
-Catwalk.jl uses a technique I call "iterated staging", which is
+## Iterated staging
+
+Catwalk.jl uses a technique I call *"iterated staging"*, which is
 essentially an outer loop which repetitively recompiles parts of
 the loop body.
 
-It does this by encoding the current "stage" into a type and passing
-an instance of that type, called the "context" to an inner function
-in the loop body.
+Recompilation happens by encoding the current *"stage"* - the
+list of concrete types to speed up and the profiler config - into a type and
+passing an instance of that type, called the *"JIT context"* to the inner
+function in the loop body.
 
-Only the *type* of the context drives the compilation process, as
-it is the only data available to the `@generated` inner function, 
-but data in the context is available for the generated code at runtime.
+Only the *type* of the JIT context drives the compilation process, as
+it is the only data available to the `@generated` inner function.
+
+## JIT context basics
+
+This is how the context looks like:
 
 ```julia
 struct CallCtx{TProfiler, TFixtypes}
@@ -37,16 +45,31 @@ struct CallCtx{TProfiler, TFixtypes}
 end
 ```
 
-With the help of recursive type parameters the context type encodes
-everything needed to generate the code. Most important is the list of 
-stabilized types as a linked list (`TFixTypes` parameter of `CallCtx`):
+Where `TFixTypes` encodes everything needed to generate the
+dispatch code, and `TProfiler` describes the profiler configuration
+used in the current batch.
+
+`TFixTypes` is built with recursive type parameters
+that encode the stabilized types as a linked list.
+For example, to speed up `FrequentType1` and `FrequentType2`, the
+optimizer generates a concrete type by recursively parametrizing
+the `TypeListItem` generic type:
 
 ```julia
 struct TypeListItem{TThis, TNext} end
 struct EmptyTypeList end
+
+julia> Catwalk.encode(FrequentType1, FrequentType2)
+
+Catwalk.TypeListItem{FrequentType1, Catwalk.TypeListItem{FrequentType2, Catwalk.EmptyTypeList}}
 ```
 
-And the type of the profiler that runs in the current batch.
+Passing this "type list" as part of the JIT context allows the `@generated`
+function to generate the type-stable routes.
+
+## Profilers
+
+The other part of the context is the profiler.
 Two profilers are implemented at the time:
 
 ```julia
@@ -63,17 +86,26 @@ it in every batch would still eat most of the cake, so it
 is sparsely used, with 1% probability by default (It is
 always active during the first two batches). 
 
+## Explorer and the full JIT context
+
 The last missing part is the explorer, which automatically
 connects the JIT compiler with the `@jit`-ed functions that
 run under its supervision.
 
-Also, a single JIT compiler can handle multiple call sites,
-so the `jitctx` in reality is not a single `CallCtx` as described
+This connection is not trivial because the `@jit` macro is only
+applied to a single function which is somewhere "inside" the
+batch, potentially in another package than the outer loop.
+It is possible to configure the optimizer manually, but
+the Explorer can automatically find the `@jit`-ed call sites
+that are called in the batch.
+
+As a single JIT compiler can handle multiple call sites,
+the `jitctx` in reality is not a single `CallCtx` as described
 earlier, but a `NamedTuple` of them, plus an explorer:
 
 ```julia
 struct OptimizerCtx{TCallCtxs, TExplorer}
-    callctxs::TCallCtxs
+    callctxs::TCallCtxs # NamedTuple of `CallCtx`s
     explorer::TExplorer
 end
 ```
@@ -95,5 +127,6 @@ It seems impossible to send back information from the compilation process
 without breaking this rule, and pushing the exploration to the tight loop
 is not feasible.
 
-The alternative is to configure the compiler with the call sites
-and `NoExplorer` manually, as described in the tuning guide.
+I think that this violation is acceptible
+(note that `RuntimeGeneratedFunctions` also does the same), but it is possible
+to turn off the Explorer, as described in the tuning guide.

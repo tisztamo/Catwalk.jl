@@ -3,6 +3,10 @@ using UnicodePlots
 const STEPS_PER_ROUND=1e6
 
 # ---- Sample code simplified from the original use case of this jit optimizer (CircoCore.jl) ----
+#
+# This is an actor scheduler, where the hot loop is parametrized with code,
+# and the distribution of dispatched concrete types depends on the actor program
+# that is executed.
 
 struct Addr
     box::UInt64
@@ -26,15 +30,16 @@ mutable struct Scheduler{THooks, TMsg, TCoreState} <: AbstractScheduler{TMsg, TC
 end
 
 @jit step_kern1! (msg) function step!(scheduler::AbstractScheduler, jitctx=Catwalk.OptimizerCtx())
-    msg = popfirst!(scheduler.msgqueue)
-    step_kern1!(msg, scheduler, jitctx)
+    msg = popfirst!(scheduler.msgqueue) # get the next message
+    step_kern1!(msg, scheduler, jitctx) # and deliver it (Catwalked call on message type)
     return nothing
 end
  
+# Kernel function to stabilize message type first. Gets the target actor and delivers the message
 @inline @jit step_kern! (targetactor) function step_kern1!(msg, scheduler::AbstractScheduler, jitctx)
     targetbox = target(msg).box::UInt64
     targetactor = get(scheduler.actorcache, targetbox, nothing)
-    step_kern!(scheduler, msg, targetactor)
+    step_kern!(scheduler, msg, targetactor) # Catwalked call on actor type
 end
 
 @inline function step_kern!(scheduler::AbstractScheduler, msg, targetactor)
@@ -86,18 +91,16 @@ end
     push!(scheduler.msgqueue, Msg{Pong}(actor.addr, Pong()))
 end
 
-function measure_steps(scheduler, ctx=Catwalk.OptimizerCtx(); num=STEPS_PER_ROUND)
-    startts = time_ns()
+function run_steps(scheduler, ctx=Catwalk.OptimizerCtx(); num=STEPS_PER_ROUND)
     for i=1:num
         step!(scheduler, ctx)
     end
-    return time_ns() - startts
 end
 
-function measure_steps2(scheduler, opt; num=STEPS_PER_ROUND)
+function measure_steps(scheduler, opt; num=STEPS_PER_ROUND)
     startts = time_ns()
     Catwalk.step!(opt)
-    measure_steps(scheduler, Catwalk.ctx(opt))
+    run_steps(scheduler, Catwalk.ctx(opt))
     return time_ns() - startts
 end
 
@@ -127,7 +130,7 @@ push!(scheduler.msgqueue, Msg{Ping}(Addr(42), Ping()))
     jittedtime = 0
     for i=1:300
         println("------ Catwalk round #$(i): -------")
-        jittedtime += measure_steps2(scheduler, optimizer)
+        jittedtime += measure_steps(scheduler, optimizer)
         normaltime += measure_steps_nojit!(scheduler)
         println(barplot(
             ["Catwalked", "original"],
