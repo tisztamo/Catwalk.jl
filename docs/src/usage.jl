@@ -1,3 +1,6 @@
+# ```@meta
+# EditURL = "https://github.com/tisztamo/Catwalk.jl/blob/main/docs/src/usage.jl"
+# ```
 # # Usage
 
 # Let's say you have a long-running calculation, organized into batches:
