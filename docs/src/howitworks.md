@@ -59,9 +59,9 @@ the `TypeListItem` generic type:
 struct TypeListItem{TThis, TNext} end
 struct EmptyTypeList end
 
-julia> Catwalk.encode(FrequentType1, FrequentType2)
+Catwalk.encode(FrequentType1, FrequentType2)
 
-Catwalk.TypeListItem{FrequentType1, Catwalk.TypeListItem{FrequentType2, Catwalk.EmptyTypeList}}
+# Catwalk.TypeListItem{FrequentType1, Catwalk.TypeListItem{FrequentType2, Catwalk.EmptyTypeList}}
 ```
 
 Passing this "type list" as part of the JIT context allows the `@generated`
