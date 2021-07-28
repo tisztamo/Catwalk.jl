@@ -88,4 +88,4 @@ jit_result == result[] || error("JIT must be a no-op!")
 # Please note that the speedup depends on the portion of the runtime spent in dynamic dispatch,
 # which is most likely smaller in your case than in this contrived example.
 #
-# You can find this example under [docs/src/usage.jl](https://github.com/tisztamo/Catwalk.jl/docs/src/usage.jl) in the repo.
+# You can find this example under [docs/src/usage.jl](https://github.com/tisztamo/Catwalk.jl/blob/main/docs/src/usage.jl) in the repo.
