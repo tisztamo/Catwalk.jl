@@ -65,10 +65,13 @@ function runbatches_jit()
     jit = Catwalk.JIT() ## Also works inside a function (no eval used)
     for batch = 1:NUM_BATCHES
         Catwalk.step!(jit)
-        hotloop_jit(Catwalk.ctx(jit))
+        hotloop_jit(Catwalk.ctx(jit)) # Dynamic dispatch is "pulled out" from the hot loop to this call
     end
 end
 
+# *Note that the body of the batch can be arbitrarily complex,
+# not just a simple for loop like in this example. See [a more complex test case](https://github.com/tisztamo/Catwalk.jl/blob/main/test/scheduling.jl).*
+#
 # Yes, it is a bit complicated to integrate your code with Catwalk, but it may
 # worth the effort:
 
