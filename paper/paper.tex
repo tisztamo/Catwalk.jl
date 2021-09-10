@@ -1,0 +1,123 @@
+
+% JuliaCon proceedings template
+\documentclass{juliacon}
+\setcounter{page}{1}
+
+\begin{document}
+
+\input{header}
+
+\maketitle
+
+\begin{abstract}
+
+\verb Catwalk.jl  is a JIT compiler implemented as a Julia library that generates optimized dispatch code based on statistical profiling.
+Unlike typical JIT compilers it requires some integration work from its users, allowing it to completely eliminate
+the need of complex deoptimization logic. It is able to compile new type-stabilized routes or reorder existing ones if the distribution of dispatched types changes during runtime and the customizable cost model predicts significant speedup compared to the best version that was previously compiled.
+
+\verb Catwalk.jl  was designed for situations when both composability and run-time polymorphism is required,
+and some run-time compilation overhead is acceptable for speeding up dynamic dispatch in hot loops.
+
+\headingtable
+
+\end{abstract}
+
+\section{Introduction}
+
+Although in most cases we can eliminate run-time dispatch in Julia by using generics or staging, when not, it incurs significant overhead compared to single dispatched virtual method calls of other languages. Thus, polymorphic behavior in hot loops is problematic in Julia \cite{subtypeperf}.
+
+A variety of techniques and packages is known to alleviate this issue, but they are either restricted to collections \cite{typesortedcollections} \cite{singledispatcharrays} or affect composability: Types injected from
+dependent packages cannot benefit from the speedup \cite{unionsplitting} \cite{manualdispatch}.
+
+
+\verb Catwalk.jl  uses a technique I call "iterated staging" to include all encountered types in the optimization, while interacting with the Julia compiler using only standard metaprogramming facilities: macros, \verb @generated  functions and generics.
+
+\section{Integration: Iterated staging}
+
+The user has to shape their hot loop to work in batches if they did not do it already e.g. for reporting. Batch size is typically between 100 and 1\_000\_000 iterations.
+
+The user has to manually drive the optimization process, like: 
+
+\begin{lstlisting}[language = Julia]
+optimizer = Catwalk.JIT()
+for batch_num in 1:BATCH_COUNT
+    Catwalk.step!(optimizer)
+    single_batch(batch_num, Catwalk.ctx(optimizer))
+end
+\end{lstlisting}
+
+\verb single_batch  or its downstream function that contains the dynamically dispatched call site must also be marked with the \verb @jit  macro that turns
+it into a generated function.
+
+\section {Compilation}
+
+This structure allows \verb Catwalk.jl  to recompile between batches if needed.
+The \emph{type} of the "JIT context" returned by the \verb Catwalk.ctx()  call
+determines the code to be generated. The call \verb f(a, unstable, b)  will 
+be rewritten to:
+
+\begin{lstlisting}[language = Julia]
+if unstable isa FIXTYPE1
+    f(a, unstable, b) # Type-stabilized route
+elseif unstable isa FIXTYPE2
+    f(a, unstable, b) # Type-stabilized route
+...
+else
+    f(a, unstable, b) # Fallback to dynamic dispatch
+end
+\end{lstlisting}
+
+\section {Optimization}
+
+Randomly selected batches get instrumented with profiling code, collecting the frequencies of dispatched types.
+
+After profiled batches the optimizer generates the list of most frequent types, and estimates the cost of dispatch for the collected profile not only for this ideal list, but also for every previously compiled one. Then it finds the best previous compilation,
+and either activates it or decides to compile code from the ideal list if the cost simulation suggests significant speedup.
+
+Every aspect of the optimization process is configurable and extendable, including the maximal number
+of stabilized types, the cost model, the profiler and the optimizer.
+
+\section {Conclusion and further work}
+
+Thanks to the "Just Ahead Of Time" compilation model of Julia, \verb Catwalk.jl  can adaptively generate highly optimal dispatch code, while working completely in "user space".
+
+Compilation cost is effectively minimized by manual impact point selection and backtesting peviously compiled versions against newly collected profiles using a cost model of dispatch. 
+
+\verb Catwalk.jl  speeds up dynamic dispatch by a factor typically between 5 and 200. Total experienced speedup exceeds 30\% in some real-life programs.
+
+In the future I plan to improve compilation overhead by using more efficient type-encoding;
+automatically determine the maximal length of the fixtype list by calculating marginal returns; and experimenting with decision trees based on type hashes.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\input{bib.tex}
+
+\end{document}
+
+% Inspired by the International Journal of Computer Applications template
