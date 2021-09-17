@@ -1,8 +1,28 @@
 \begin{thebibliography}{1}
 
-\bibitem{bezanson2017julia}
-Jeff Bezanson, Alan Edelman, Stefan Karpinski, and Viral~B Shah.
-Julia: A fresh approach to numerical computing.
-{\em SIAM review}, 59(1):65--98, 2017.
+\bibitem{unionsplitting}
+Tim Holy.
+Union-splitting: what it is, and why you should care.
+{\em The Julia Language Blog}, 2018.
+
+\bibitem{manualdispatch}
+jlapeyre@github John~Lapeyre.
+Singledispatcharrays.jl.
+{\em Github}, 2020.
+
+\bibitem{singledispatcharrays}
+melonedo@github.
+Singledispatcharrays.jl.
+{\em Github}, 2021.
+
+\bibitem{subtypeperf}
+Ronneesley~Moura Teles.
+Performance drawback with subtyping.
+{\em discourse.julialang.org}, 2020.
+
+\bibitem{typesortedcollections}
+tkoolen@github Twan~Koolen.
+Typesortedcollections.jl.
+{\em Github}, 2017.
 
 \end{thebibliography}
