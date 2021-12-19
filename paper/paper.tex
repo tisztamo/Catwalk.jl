@@ -15,8 +15,8 @@
 Unlike typical JIT compilers it requires some integration work from its users, allowing it to completely eliminate
 the need of complex deoptimization logic. It is able to compile new type-stabilized routes or reorder existing ones if the distribution of dispatched types changes during runtime and the customizable cost model predicts significant speedup compared to the best version that was previously compiled.
 
-\verb|Catwalk.jl| was designed for situations when both composability and run-time polymorphism is required,
-and some run-time compilation overhead is acceptable for speeding up dynamic dispatch in hot loops.
+\verb|Catwalk.jl| was designed for situations when both composability and runtime polymorphism is required,
+and some runtime compilation overhead is acceptable for speeding up dynamic dispatch in hot loops.
 
 \headingtable
 
@@ -24,13 +24,14 @@ and some run-time compilation overhead is acceptable for speeding up dynamic dis
 
 \section{Introduction}
 
-Although in most cases we can eliminate run-time dispatch in Julia by using generics or staging, when not, it incurs significant overhead compared to single dispatched virtual method calls of other languages. Thus, polymorphic behavior in hot loops is problematic in Julia \cite{subtypeperf}.
+Although in most cases we can eliminate runtime dispatch in Julia by using generics or staging, when not, it incurs significant overhead compared to single dispatched virtual method calls of other languages.
+Thus, polymorphic behavior in hot loops is problematic in Julia \cite{subtypeperf}.
 
-A variety of techniques and packages is known to alleviate this issue, but they are either restricted to collections \cite{typesortedcollections} \cite{singledispatcharrays} or affect composability: Types injected from
-dependent packages cannot benefit from the speedup \cite{unionsplitting} \cite{manualdispatch}.
+The Julia compiler implements an optimization called "union splitting" \cite{unionsplitting} which can generate fast routes for up to five concrete types.
+Packages also exist to alleviate the issue, but they are either restricted to collections \cite{typesortedcollections} \cite{singledispatcharrays} or affect composability \cite{manualdispatch}.
+None of the existing solutions can use runtime information.
 
-
-\verb|Catwalk.jl| uses a technique I call "iterated staging" to include all encountered types in the optimization, while interacting with the Julia compiler using only standard metaprogramming facilities: macros, \verb|@generated| functions and generics.
+\verb|Catwalk.jl| \cite{catwalkwebsite} uses a technique I call "iterated staging" to include all encountered types in the optimization, while interacting with the Julia compiler using only standard metaprogramming facilities: macros, \verb|@generated| functions and generics.
 
 \section{Integration: Iterated staging}
 
