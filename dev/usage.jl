@@ -38,8 +38,10 @@ end
 # As `get_some_x` is not type-stable, `calc_with_x` must be dynamically
 # dispatched, which slows down the calculation.
 #
-# Sometimes it is not feasible to type-stabilize `get_some_x`.
-# Catwalk.jl is here for those cases.
+# Note: This is a contrived example which we could type-stabilize by using union splitting.
+# But sometimes it is not feasible to type-stabilize `get_some_x`.
+# Catwalk.jl is here for those cases. Check the [alternatives](../#Alternatives) before integrating Catwalk!
+
 # 
 # You mark `hotloop`, the outer function
 # with the `@jit` macro and provide the name of the dynamically
