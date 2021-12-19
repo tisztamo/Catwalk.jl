@@ -4,25 +4,36 @@
 Tim Holy.
 Union-splitting: what it is, and why you should care.
 {\em The Julia Language Blog}, 2018.
+https://julialang.org/blog/2018/08/union-splitting/.
 
 \bibitem{manualdispatch}
 jlapeyre@github John~Lapeyre.
 Singledispatcharrays.jl.
 {\em Github}, 2020.
+https://github.com/jlapeyre/ManualDispatch.jl.
+
+\bibitem{catwalkwebsite}
+tisztamo@github Krisztián~Schäffer.
+Catwalk.jl.
+{\em Github}, 2020.
+https://github.com/tisztamo/Catwalk.jl.
 
 \bibitem{singledispatcharrays}
 melonedo@github.
 Singledispatcharrays.jl.
 {\em Github}, 2021.
+https://github.com/melonedo/SingleDispatchArrays.jl.
 
 \bibitem{subtypeperf}
 Ronneesley~Moura Teles.
 Performance drawback with subtyping.
 {\em discourse.julialang.org}, 2020.
+https://discourse.julialang.org/t/performance-drawback-with-subtyping/51939.
 
 \bibitem{typesortedcollections}
 tkoolen@github Twan~Koolen.
 Typesortedcollections.jl.
 {\em Github}, 2017.
+https://github.com/tkoolen/TypeSortedCollections.jl.
 
 \end{thebibliography}
