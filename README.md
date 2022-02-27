@@ -1,13 +1,10 @@
 # Catwalk.jl
 
-![Lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)<!--
-![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)
-![Lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)
-![Lifecycle](https://img.shields.io/badge/lifecycle-retired-orange.svg)
-![Lifecycle](https://img.shields.io/badge/lifecycle-archived-red.svg)
-![Lifecycle](https://img.shields.io/badge/lifecycle-dormant-blue.svg) -->
+[![DOI](https://zenodo.org/badge/299561138.svg)](https://zenodo.org/badge/latestdoi/299561138)
+
 [![Documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://tisztamo.github.io/Catwalk.jl/dev/)
 [![CI](https://github.com/tisztamo/Catwalk.jl/actions/workflows/ci.yml/badge.svg)](https://github.com/tisztamo/Catwalk.jl/actions/workflows/ci.yml)
+![Lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)
 [![ColPrac: Contributor Guide on Collaborative Practices for Community Packages](https://img.shields.io/badge/ColPrac-Contributor's%20Guide-blueviolet)](https://github.com/SciML/ColPrac)
 
 Catwalk.jl can speed up long-running Julia processes by minimizing the
