@@ -76,7 +76,7 @@
   \@setfontsize\normalsize\@ixpt{10pt}
   \abovedisplayskip 6pt plus2pt minus1pt\belowdisplayskip \abovedisplayskip
   \abovedisplayshortskip 6pt plus0pt minus 3pt
-  \belowdisplayshortskip 6pt plus0pt minus3pt\let\@listi\@listI} 
+  \belowdisplayshortskip 6pt plus0pt minus3pt\let\@listi\@listI}
 
 \newcommand\small{%
   \@setfontsize\small\@ixpt{11pt}%
@@ -84,7 +84,7 @@
   \abovedisplayshortskip 5pt plus0pt minus2pt\belowdisplayshortskip 5pt plus0pt
       minus 2pt
   \def\@listi{\leftmargin\leftmargini \topsep 5pt plus 2pt minus 1pt\parsep 0pt
-    plus .7pt 
+    plus .7pt
   \itemsep 1.6pt plus .8pt}}
 \newcommand\footnotesize{%
 %   \@setfontsize\footnotesize\@viiipt{10pt}
@@ -93,7 +93,7 @@
   \abovedisplayshortskip 4pt plus 0pt minus 1pt\belowdisplayshortskip 4pt plus
        0pt minus 1pt
   \def\@listi{\leftmargin\leftmargini \topsep 4pt plus 1pt minus
-     0pt\parsep 0pt plus .5pt 
+     0pt\parsep 0pt plus .5pt
      \itemsep 1pt plus .7pt}}
 
 \newcommand\scriptsize{\@setfontsize\scriptsize\@viipt\@viiipt}
@@ -104,9 +104,9 @@
 \newcommand\huge{\@setfontsize\huge\@xxpt{25}}
 \newcommand\Huge{\@setfontsize\Huge\@xxvpt{30}}
 %
-\normalsize 
+\normalsize
 %
-\newdimen\tempdimen  
+\newdimen\tempdimen
 %
 \setlength\trimheight{11in}
 \setlength\trimwidth{8.5in}
@@ -124,12 +124,12 @@
 \headheight 6pt%
 \headsep 29.2pt%
 \topskip6pt%
-\footskip 100pt 
+\footskip 100pt
 %
-\marginparwidth 0.5in 
-\marginparsep .125in 
+\marginparwidth 0.5in
+\marginparsep .125in
 \columnsep24pt
-\columnseprule 0pt 
+\columnseprule 0pt
 %
 \def\titlefont{\huge\selectfont\centering\mathversion{bold}}
 \def\authorfont{\fontfamily{phv}\fontsize{10}{12}\selectfont\rightskip0pt plus1fill} %\mathversion{sfnormal}
@@ -161,34 +161,34 @@
           {\mbox{\boldmath$\scriptscriptstyle#1$}}}
 %
 \footnotesep 7pt
-\skip\footins 15pt plus 4pt minus 3pt 
-\floatsep 12pt plus 2pt minus 2pt 
-\textfloatsep \floatsep 
-\intextsep 1pc plus 1pc 
-\dblfloatsep 12pt plus 2pt minus 2pt 
-\dbltextfloatsep 20pt plus 2pt minus 4pt 
-\@fptop 0pt plus 1fil \@fpsep 1pc plus 2fil \@fpbot 0pt plus 1fil 
+\skip\footins 15pt plus 4pt minus 3pt
+\floatsep 12pt plus 2pt minus 2pt
+\textfloatsep \floatsep
+\intextsep 1pc plus 1pc
+\dblfloatsep 12pt plus 2pt minus 2pt
+\dbltextfloatsep 20pt plus 2pt minus 4pt
+\@fptop 0pt plus 1fil \@fpsep 1pc plus 2fil \@fpbot 0pt plus 1fil
 \@dblfptop 0pt plus 1fil \@dblfpsep 8pt plus 2fil \@dblfpbot 0pt plus 1fil
-\marginparpush 6pt 
+\marginparpush 6pt
 \parskip 0pt \parindent 0pt \partopsep 0pt  % plus .1pt FBU
-\@lowpenalty 51 \@medpenalty 151 \@highpenalty 301 
+\@lowpenalty 51 \@medpenalty 151 \@highpenalty 301
 \@beginparpenalty -\@lowpenalty \@endparpenalty -\@lowpenalty \@itempenalty
--\@lowpenalty 
+-\@lowpenalty
 %
 \def\part{\@ucheadtrue
- \@startsection{part}{9}{\z@}{-10pt plus -4pt minus 
+ \@startsection{part}{9}{\z@}{-10pt plus -4pt minus
  -2pt}{4pt}{\reset@font\normalsize\rmfamily}}
 \def\section{\@ucheadtrue
- \@startsection{section}{1}{\z@}{-10pt plus -4pt minus 
+ \@startsection{section}{1}{\z@}{-10pt plus -4pt minus
  -2pt}{6pt}{\reset@font\fontsize{10}{12}\raggedright\rmfamily\bfseries}}
 \def\subsection{\@ucheadfalse
- \@startsection{subsection}{2}{\z@}{-8pt plus -2pt minus 
+ \@startsection{subsection}{2}{\z@}{-8pt plus -2pt minus
  -1pt}{6pt}{\reset@font\fontsize{10}{12}\raggedright\rmfamily\bfseries}}
 \def\subsubsection{\@ucheadfalse
- \@startsection{subsubsection}{3}{\parindent}{6pt plus 
+ \@startsection{subsubsection}{3}{\parindent}{6pt plus
 1pt}{-5pt}{\reset@font\fontsize{9}{10}\itshape}}
 \def\paragraph{\@ucheadfalse
- \@startsection{paragraph}{3}{\parindent}{6pt plus 
+ \@startsection{paragraph}{3}{\parindent}{6pt plus
 1pt}{-5pt}{\reset@font\fontsize{10}{12}\itshape}}
 %%
 \renewcommand{\@seccntformat}[1]{\textup{\csname the#1\endcsname}}
@@ -196,7 +196,7 @@
 \def\@trivlist{\@topsepadd\topsep
 \if@noskipsec \gdef\@period{}\leavevmode\gdef\@period{.}\fi
  \ifvmode \advance\@topsepadd\partopsep \else \unskip\par\fi
- \if@inlabel \@noparitemtrue \@noparlisttrue 
+ \if@inlabel \@noparitemtrue \@noparlisttrue
  \else \@noparlistfalse \@topsep\@topsepadd \fi
  \advance\@topsep \parskip
  \leftskip\z@\rightskip\@rightskip \parfillskip\@flushglue
@@ -214,7 +214,7 @@
   \if@nobreak
     \everypar{}%
     \ifnum#2=2
-	    \vskip-2pt 
+	    \vskip-2pt
 	   \fi
   \else
     \addpenalty\@secpenalty\addvspace\@tempskipa
@@ -289,24 +289,24 @@
 \settowidth{\leftmargini}{(9)} \addtolength\leftmargini\labelsep
 \settowidth{\leftmarginii}{(b)} \addtolength\leftmarginii\labelsep
 \leftmarginiii \leftmarginii
-\leftmarginiv \leftmarginii 
-\leftmarginv \leftmarginii 
-\leftmarginvi \leftmarginii 
+\leftmarginiv \leftmarginii
+\leftmarginv \leftmarginii
+\leftmarginvi \leftmarginii
 \leftmargin\leftmargini
 \labelwidth\leftmargini\advance\labelwidth-\labelsep
 \def\@listI{\leftmargin\leftmargini \parsep 0pt plus 1pt\topsep 6pt plus 2pt
 minus 2pt\itemsep 2pt plus 1pt minus .5pt}
 \let\@listi\@listI
-\@listi 
+\@listi
 \def\@listii{\leftmargin\leftmarginii
  \labelwidth\leftmarginii\advance\labelwidth-\labelsep
- \topsep 0pt plus 1pt 
- \parsep 0pt plus .5pt 
+ \topsep 0pt plus 1pt
+ \parsep 0pt plus .5pt
  \itemsep \parsep}
 \def\@listiii{\leftmargin\leftmarginiii
  \labelwidth\leftmarginiii\advance\labelwidth-\labelsep
- \topsep 0pt plus 1pt 
- \parsep 0pt plus .5pt 
+ \topsep 0pt plus 1pt
+ \parsep 0pt plus .5pt
  \itemsep \parsep}
 \def\@listiv{\leftmargin\leftmarginiv
  \labelwidth\leftmarginiv\advance\labelwidth-\labelsep}
@@ -316,18 +316,18 @@ minus 2pt\itemsep 2pt plus 1pt minus .5pt}
  \labelwidth\leftmarginvi\advance\labelwidth-\labelsep}
 %
 \def\enumerate{\ifnum \@enumdepth >3 \@toodeep\else
- \advance\@enumdepth \@ne 
+ \advance\@enumdepth \@ne
  \edef\@enumctr{enum\romannumeral\the\@enumdepth}\list
  {\csname label\@enumctr\endcsname}{\usecounter
  {\@enumctr}\def\makelabel##1{##1\hss}}\fi}
 \def\longenum{\ifnum \@enumdepth >3 \@toodeep\else
- \advance\@enumdepth \@ne 
+ \advance\@enumdepth \@ne
  \edef\@enumctr{enum\romannumeral\the\@enumdepth}\list
  {\csname label\@enumctr\endcsname}{\usecounter
  {\@enumctr}\labelwidth\z@}\fi}
 \let\endlongenum\endlist
-\def\labelenumi{{\rm (}\arabic{enumi}\/{\rm )}} 
-\def\theenumi{\arabic{enumi}} 
+\def\labelenumi{{\rm (}\arabic{enumi}\/{\rm )}}
+\def\theenumi{\arabic{enumi}}
 \def\labelenumii{{\rm (}\alph{enumii}\rm{)}}
 \def\theenumii{\alph{enumii}}
 \def\p@enumii{\theenumi}
@@ -335,7 +335,7 @@ minus 2pt\itemsep 2pt plus 1pt minus .5pt}
 \def\theenumiii{\roman{enumiii}}
 \def\p@enumiii{\theenumi{\rm (}\theenumii{\rm )}}
 \def\labelenumiv{\Alph{enumiv}.}
-\def\theenumiv{\Alph{enumiv}} 
+\def\theenumiv{\Alph{enumiv}}
 \renewcommand\theenumiv{\@Alph\c@enumiv}
 \def\p@enumiv{\p@enumiii\theenumiii}
 
@@ -352,9 +352,9 @@ minus 2pt\itemsep 2pt plus 1pt minus .5pt}
 \def\longitem{\list{---}{\labelwidth\z@
  \leftmargin\z@ \itemindent\parindent \advance\itemindent\labelsep}}
 \let\endlongitem\endlist
-\def\verse{\let\\=\@centercr 
- \list{}{\leftmargin 2pc 
- \itemindent -1.5em\listparindent \itemindent 
+\def\verse{\let\\=\@centercr
+ \list{}{\leftmargin 2pc
+ \itemindent -1.5em\listparindent \itemindent
  \rightmargin\leftmargin\advance\leftmargin 1.5em}\item[]}
 \let\endverse\endlist
 \def\quotation{\list{}{\leftmargin 2pc \listparindent .5em
@@ -403,12 +403,12 @@ minus 2pt\itemsep 2pt plus 1pt minus .5pt}
 \italicenvfalse
 \begin{defi}}{\end{defi}\italicenvtrue}
 %
-\def\@begintheorem#1#2{\trivlist \item[\hskip 10pt\hskip 
+\def\@begintheorem#1#2{\trivlist \item[\hskip 10pt\hskip
    \labelsep{\sc{#1}\hskip 5pt\relax #2.}] \itshape}
 %
 \def\@opargbegintheorem#1#2#3{\trivlist
-     \item[\hskip 10pt \hskip 
-\labelsep{\sc{#1}\savebox\@tempboxa{\sc{#3}}\ifdim 
+     \item[\hskip 10pt \hskip
+\labelsep{\sc{#1}\savebox\@tempboxa{\sc{#3}}\ifdim
         \wd\@tempboxa>\z@ \hskip 5pt\relax \sc{#2}  \box\@tempboxa\fi.}]
 \itshape}
 %
@@ -417,9 +417,9 @@ minus 2pt\itemsep 2pt plus 1pt minus .5pt}
 \def\endproof{\if@qeded\else\qed\fi\endtrivlist}
 \def\qed{\unskip\kern 10pt{\unitlength1pt\linethickness{.4pt}\framebox(5,5){}}
 \global\@qededtrue}
-\def\@proof{\trivlist \item[\hskip 10pt\hskip 
+\def\@proof{\trivlist \item[\hskip 10pt\hskip
  \labelsep{\sc Proof.}]\ignorespaces}
-\def\@xproof[#1]{\trivlist \item[\hskip 10pt\hskip 
+\def\@xproof[#1]{\trivlist \item[\hskip 10pt\hskip
  \labelsep{\sc Proof #1.}]\ignorespaces}
 %
 \def\newdef#1#2{\expandafter\@ifdefinable\csname #1\endcsname
@@ -430,10 +430,10 @@ the#1\endcsname{\@thmcounter{#1}}\global
 \def\@defthm#1#2{\refstepcounter
  {#1}\@ifnextchar[{\@ydefthm{#1}{#2}}{\@xdefthm{#1}{#2}}}
 \def\@xdefthm#1#2{\@begindef{#2}{\csname the#1\endcsname}\ignorespaces}
-\def\@ydefthm#1#2[#3]{\trivlist \item[\hskip 10pt\hskip 
- \labelsep{\it #2\savebox\@tempboxa{#3}\ifdim 
+\def\@ydefthm#1#2[#3]{\trivlist \item[\hskip 10pt\hskip
+ \labelsep{\it #2\savebox\@tempboxa{#3}\ifdim
  \wd\@tempboxa>\z@ \ \box\@tempboxa\fi.}]\ignorespaces}
-\def\@begindef#1#2{\trivlist \item[\hskip 10pt\hskip 
+\def\@begindef#1#2{\trivlist \item[\hskip 10pt\hskip
  \labelsep{\it #1\ \rm #2.}]}
 %
 \def\theequation{\arabic{equation}}
@@ -442,11 +442,11 @@ the#1\endcsname{\@thmcounter{#1}}\global
  \else \newpage \fi \thispagestyle{empty}\c@page\z@}
 \def\endtitlepage{\if@restonecol\twocolumn \else \newpage \fi}
 %
-\arraycolsep 2.5pt \tabcolsep 6pt \arrayrulewidth .4pt \doublerulesep 2pt 
-\tabbingsep \labelsep 
+\arraycolsep 2.5pt \tabcolsep 6pt \arrayrulewidth .4pt \doublerulesep 2pt
+\tabbingsep \labelsep
 %
 \skip\@mpfootins = \skip\footins
-\fboxsep = 3pt \fboxrule = .4pt 
+\fboxsep = 3pt \fboxrule = .4pt
 %
 \newcounter{part}
 \newcounter{section}
@@ -454,7 +454,7 @@ the#1\endcsname{\@thmcounter{#1}}\global
 \newcounter{subsubsection}[subsection]
 \newcounter{paragraph}[subsubsection]
 %
-\def\thepart{\Roman{part}} 
+\def\thepart{\Roman{part}}
 \def\thesection {\arabic{section}}
 \def\thesubsection {\thesection.\arabic{subsection}}
 \def\thesubsubsection {\itshape\thesubsection.\arabic{subsubsection}}
@@ -470,13 +470,13 @@ the#1\endcsname{\@thmcounter{#1}}\global
 \def\l@part#1#2{\addpenalty{\@secpenalty}
  \addvspace{2.25em plus 1pt} \begingroup
  \@tempdima 3em \parindent \z@ \rightskip \@pnumwidth \parfillskip
--\@pnumwidth 
+-\@pnumwidth
  {\large \bf \leavevmode #1\hfil \hbox to\@pnumwidth{\hss #2}}\par
  \nobreak \endgroup}
 \def\l@section#1#2{\addpenalty{\@secpenalty} \addvspace{1.0em plus 1pt}
 \@tempdima 1.5em \begingroup
- \parindent \z@ \rightskip \@pnumwidth 
- \parfillskip -\@pnumwidth 
+ \parindent \z@ \rightskip \@pnumwidth
+ \parfillskip -\@pnumwidth
  \bf \leavevmode #1\hfil \hbox to\@pnumwidth{\hss #2}\par
  \endgroup}
 \def\l@subsection{\@dottedtocline{2}{1.5em}{2.3em}}
@@ -501,11 +501,11 @@ the#1\endcsname{\@thmcounter{#1}}\global
 \def\indexspace{\par \vskip 10pt plus 5pt minus 3pt\relax}
 %
 \def\footnoterule{\kern-3\p@
- \hrule \@height 0.2\p@ \@width 47\p@ 
+ \hrule \@height 0.2\p@ \@width 47\p@
   \kern 2.6\p@
-} 
+}
 
-\long\def\@makefntext#1{\parindent 1em\noindent 
+\long\def\@makefntext#1{\parindent 1em\noindent
  $^{\@thefnmark}$#1}
 %
 \setcounter{topnumber}{3}
@@ -522,7 +522,7 @@ the#1\endcsname{\@thmcounter{#1}}\global
 \long\def\@makecaption#1#2{\vskip 1pc \setbox\@tempboxa\hbox{#1.\hskip
 1em\relax #2}
  \ifdim \wd\@tempboxa >\hsize #1. #2\par \else \hbox
-to\hsize{\hfil\box\@tempboxa\hfil} 
+to\hsize{\hfil\box\@tempboxa\hfil}
  \fi}
 
 \def\nocaption{\refstepcounter\@captype \par
@@ -570,7 +570,7 @@ to\hsize{\hfil\box\@tempboxa\hfil}
     \setbox\tbbox=\vbox{\hsize\tempdimen{\tablenumfont #1}\ {\tablecaptionfont #2\par}}%
     \setbox\@tempboxa\hbox{\hsize\tempdimen{\tablenumfont #1}\ {\tablecaptionfont #2\par}\vphantom{jgq}}%
     \ifdim \wd\@tempboxa >\tempdimen
-        \centerline{\box\tbbox}%        
+        \centerline{\box\tbbox}%
     \else
         \centerline{\box\@tempboxa}%
     \fi
@@ -601,12 +601,12 @@ to\hsize{\hfil\box\@tempboxa\hfil}
  \ifdim \wd\@tempboxa >\hsize \sloppy #1.\hskip 1em\relax #2 \par \else \hbox
 to\hsize{\hfil\box\@tempboxa\hfil}
  \fi}
-\def\@atcap{\par\egroup\refstepcounter\@captype 
+\def\@atcap{\par\egroup\refstepcounter\@captype
  \@dblarg{\@atcapx\@captype}}
 \long\def\@atcapx#1[#2]#3{\setbox\@nfcapbox\vbox {\hsize \wd\@nfigbox
  \@parboxrestore
  \@atmakecap{\csname fnum@#1\endcsname}{\ignorespaces #3}\par}}
-\def\@atnocap{\egroup \refstepcounter\@captype 
+\def\@atnocap{\egroup \refstepcounter\@captype
  \setbox\@nfcapbox\vbox {\hsize \wd\@nfigbox
  \hbox to\hsize{\hfil \footnotesize Table \thetable\hfil}}}
 %
@@ -620,7 +620,7 @@ to\hsize{\hfil\box\@tempboxa\hfil}
  \caption{#1}
 	\centerline{\box\tempbox}
   }%
-% 
+%
 \newenvironment{tabnote}{%
 \par%\addvspace{-1pt}
 \tabnotefont
@@ -650,41 +650,41 @@ to\hsize{\hfil\box\@tempboxa\hfil}
  \ifdim \wd\@tempboxa >\hsize \sloppy #1.\hskip 1em\relax #2 \par \else \hbox
 to\hsize{\if@nfeven\else\hfil\fi\box\@tempboxa\if@nfeven\hfil\fi}
  \fi}
-\def\@nfcap{\par\egroup\refstepcounter\@captype 
+\def\@nfcap{\par\egroup\refstepcounter\@captype
  \@dblarg{\@nfcapx\@captype}}
 \long\def\@nfcapx#1[#2]#3{\@seteven
  \setbox\@nfcapbox\vbox to \ht\@nfigbox
  {\hsize \textwidth \advance\hsize -2pc \advance\hsize -\wd\@nfigbox
  \@parboxrestore
- \vfil 
+ \vfil
  \@nfmakecap{\csname fnum@#1\endcsname}{\ignorespaces #3}\par
  \vfil}}
 \def\@nfnocap{\egroup \refstepcounter\@captype \@seteven
  \setbox\@nfcapbox\vbox to \ht\@nfigbox
  {\hsize \textwidth \advance\hsize -2pc \advance\hsize -\wd\@nfigbox
  \@parboxrestore
- \vfil 
- \hbox to\hsize{\if@nfeven\else\hfil\fi 
+ \vfil
+ \hbox to\hsize{\if@nfeven\else\hfil\fi
  \footnotesize Figure \thefigure
  \if@nfeven\hfil\fi}
  \vfil}}
-\def\@seteven{\@nfeventrue 
+\def\@seteven{\@nfeventrue
    \@ifundefined{r@@nf\thefigure}{}{%
       \edef\@tmpnf{\csname r@@nf\thefigure\endcsname}%
       \edef\@tmpnf{\expandafter\@getpagenum\@tmpnf}%
       \ifodd\@tmpnf\relax\@nfevenfalse\fi}%
 \label{@nf\thefigure}\edef\@tmpnfx{\if@nfeven e\else o\fi}
-\edef\@tmpnf{\write\@unused {\noexpand\ifodd \noexpand\c@page 
+\edef\@tmpnf{\write\@unused {\noexpand\ifodd \noexpand\c@page
  \noexpand\if \@tmpnfx e\noexpand\@nfmsg{\thefigure} \noexpand\fi
- \noexpand\else 
- \noexpand\if \@tmpnfx o\noexpand\@nfmsg{\thefigure}\noexpand\fi 
+ \noexpand\else
+ \noexpand\if \@tmpnfx o\noexpand\@nfmsg{\thefigure}\noexpand\fi
  \noexpand\fi }}\@tmpnf}
 \def\@nfmsg#1{Bad narrowfig: Figure #1 on page \thepage}
 
 \newdimen\@narrowfig
 \newbox\@nfigbox
 \newbox\@nfcapbox
-\newif\if@nfeven 
+\newif\if@nfeven
 
 
 \def\maketitle{%
@@ -698,9 +698,11 @@ to\hsize{\if@nfeven\else\hfil\fi\box\@tempboxa\if@nfeven\hfil\fi}
 %
 \def\@maketitle{\newpage \thispagestyle{titlepage}\par
  \begingroup \lineskip = \z@\null
+ \vspace{-1.75em}
  \begin{picture}(5,5)
 	\includegraphics[width=1in]{logojuliacon.pdf}
  \end{picture}
+ \vspace{1.75em}
  \vskip -7pt\relax %-18.5pt
  \parindent\z@ \LARGE {\centering \hyphenpenalty\@M
   {\titlefont \@title} \par
@@ -708,7 +710,7 @@ to\hsize{\if@nfeven\else\hfil\fi\box\@tempboxa\if@nfeven\hfil\fi}
  \global\runningfoot %aiellom
 }
 \label{@firstpg}
-{ 
+{
 \begin{center}%
     \vskip 0.1em%
     {\large
@@ -727,28 +729,29 @@ to\hsize{\if@nfeven\else\hfil\fi\box\@tempboxa\if@nfeven\hfil\fi}
 \newbox\@terms
 \newbox\@keywords
 
+
 %
 \newenvironment{abstract}
-	       {\section*{ABSTRACT}\par\fontsize{10}{12}\indent\ignorespaces}
-	       {
-		   { \ifvoid\@terms\else\box\@terms\fi
- \@keywords \@juliaconformat\empty}\vskip6pt}
+{\section*{ABSTRACT}\par\fontsize{10}{12}\indent\ignorespaces}
+{
+	{ \ifvoid\@terms\else\box\@terms\fi
+		\@keywords \@juliaconformat\empty}\vskip6pt}
 %
 \def\terms#1{\setbox\@terms=\vbox{\hsize20pc%
- \footnotesize%
-\parindent 0pt \noindent 
- { \section*{General Terms}} \ignorespaces #1}}
+		\footnotesize%
+		\parindent 0pt \noindent
+		{ \section*{General Terms}} \ignorespaces #1{\vspace{-0.75em}}}}
 \def\keywords#1{\gdef\@keywords{\hsize20pc%
-\parindent 0pt\noindent\ignorespaces% 
- { \section*{Keywords} } \ignorespaces #1}
-}
+		\parindent 0pt\noindent\ignorespaces%
+		{{\vspace{-0.75em}} \section*{Keywords}} \ignorespaces #1{\vspace{1em}}}}
+%}
 
 \def\category#1#2#3{\@ifnextchar
  [{\@category{#1}{#2}{#3}}{\@xcategory{#1}{#2}{#3}}}
-\def\@category#1#2#3[#4]{\edef\@tempa{\ifx \@categories\@empty 
+\def\@category#1#2#3[#4]{\edef\@tempa{\ifx \@categories\@empty
  \else ; \fi}{\def\protect{\noexpand\protect
  \noexpand}\def\and{\noexpand\and}\xdef\@categories{\@categories\@tempa #1
-[{\bf #2}]: 
+[{\bf #2}]:
  #3\kern\z@---\hskip\z@{\it #4}}}}
 \def\@xcategory#1#2#3{\edef\@tempa{\ifx \@categories\@empty \else ;
 \fi}{\def\protect{\noexpand\protect\noexpand}\def\and{\noexpand
@@ -756,7 +759,7 @@ to\hsize{\if@nfeven\else\hfil\fi\box\@tempboxa\if@nfeven\hfil\fi}
 \def\@categories{}
 
 \newenvironment{ackslike}[1]
-  {\par \footnotesize 
+  {\par \footnotesize
    \@ucheadfalse
    \@startsection{subsection}{2}{\z@}{-16pt plus -2pt minus -1pt}{2pt}{\sf}*
    {\uppercase{#1}}\par\normalsize
@@ -768,7 +771,7 @@ to\hsize{\if@nfeven\else\hfil\fi\box\@tempboxa\if@nfeven\hfil\fi}
 \newcommand\headingtable{%
   \begin{tabular}[b]{l} {\@journalName}\end{tabular}}
 \markright{\protect\headingtable}
-\mark{{}{}} 
+\mark{{}{}}
 \def\bull{{\fontsize{7}{7}\selectfont\raise1.6pt\hbox{$\bullet$}}}
 \def\ps@myheadings{\let\@mkboth\@gobbletwo
 \def\@oddhead{ \fontsize{9}{12} \rm {{\itshape\headingtable}\hfill \@volume(\@issue), \@year}}
@@ -793,14 +796,14 @@ to\hsize{\if@nfeven\else\hfil\fi\box\@tempboxa\if@nfeven\hfil\fi}
  \or \or \@addamp \or
  \@acolampacol \or \@firstampfalse \@acol \fi
 \edef\@preamble{\@preamble
- \ifcase \@chnum 
- \hfil$\relax\displaystyle\@sharp$\hfil \or $\relax\displaystyle\@sharp$\hfil 
+ \ifcase \@chnum
+ \hfil$\relax\displaystyle\@sharp$\hfil \or $\relax\displaystyle\@sharp$\hfil
  \or \hfil$\relax\displaystyle\@sharp$\fi}}
 \def\marray{\arraycolsep 2.5pt\let\@acol\@arrayacol \let\@classz\@marrayclassz
  \let\@classiv\@marrayclassiv \let\\\@arraycr\def\@halignto{}\@tabarray}
 \def\endmarray{\crcr\egroup\egroup}
 %
-\ps@myheadings \pagenumbering{arabic} \onecolumn 
+\ps@myheadings \pagenumbering{arabic} \onecolumn
 %
 \setlength  \labelsep  {.5em}
 \setlength  \labelwidth{\leftmargini}
@@ -822,7 +825,7 @@ to\hsize{\if@nfeven\else\hfil\fi\box\@tempboxa\if@nfeven\hfil\fi}
 %\def\@evenfoot{\@runningfoot\hfill\hbox{} \thepage }
 %\def\firstfootsize{\@setsize\firstfootsize{9pt}\vipt\@vipt}
 \def\ps@titlepage{\let\@mkboth\@gobbletwo
-\def\@oddhead{\fontsize{9}{12} \rm {\hskip 19pt\itshape\headingtable}}\def\@oddfoot{\hbox{}\hfill\fontsize{9}{12}\@firstfoot}%
+\def\@oddhead{\fontsize{9}{12} \rm {\hskip 19pt\itshape}}\def\@oddfoot{\hbox{}\hfill\fontsize{9}{12}\@firstfoot}%
 \def\@evenhead{}\def\@evenfoot{\firstfootsize\@firstfoot\hfill\hbox{}}}
 %
 \def\@listI{\leftmargin\leftmargini
@@ -831,18 +834,18 @@ to\hsize{\if@nfeven\else\hfil\fi\box\@tempboxa\if@nfeven\hfil\fi}
  \topsep 6pt plus 2pt minus 2pt
  \itemsep 2pt plus 1pt minus .5pt}
 \let\@listi\@listI
-\@listi 
+\@listi
 %
 \def\longenum{\ifnum \@enumdepth >3 \@toodeep\else
- \advance\@enumdepth \@ne 
+ \advance\@enumdepth \@ne
  \edef\@enumctr{enum\romannumeral\the\@enumdepth}\list
  {\csname label\@enumctr\endcsname}{\usecounter
  {\@enumctr}\labelwidth\z@\leftmargin\z@
  \itemindent\parindent \advance\itemindent\labelsep}\fi}
 %
-\def\ack{ \par \footnotesize 
+\def\ack{ \par \footnotesize
 \@ucheadfalse
-\@startsection{subsection}{2}{\z@}{-16pt plus -2pt minus 
+\@startsection{subsection}{2}{\z@}{-16pt plus -2pt minus
  -1pt}{2pt}{\sf}*{ACKNOWLEDGMENT}\par\normalsize
 }
 \def\endack{\par}
