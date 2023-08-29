@@ -3,6 +3,7 @@
 [![DOI](https://zenodo.org/badge/299561138.svg)](https://zenodo.org/badge/latestdoi/299561138)
 [![DOI](https://proceedings.juliacon.org/papers/10.21105/jcon.00098/status.svg)](https://doi.org/10.21105/jcon.00098)
 
+
 [![Documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://tisztamo.github.io/Catwalk.jl/dev/)
 [![CI](https://github.com/tisztamo/Catwalk.jl/actions/workflows/ci.yml/badge.svg)](https://github.com/tisztamo/Catwalk.jl/actions/workflows/ci.yml)
 ![Lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)
